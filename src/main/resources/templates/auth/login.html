@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STB — Connexion Espace Interne</title>
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+    <!-- Brand -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px">
+      <div style="width:46px;height:46px;background:var(--stb-red);border-radius:11px;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;font-weight:900;letter-spacing:-1px;flex-shrink:0">STB</div>
+      <div>
+        <div style="font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.3px">Société Tunisienne de Banque</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px">Espace collaborateur interne</div>
+      </div>
+    </div>
+
+    <h2 style="font-size:23px;font-weight:800;color:var(--navy);margin-bottom:4px">Connexion</h2>
+    <p style="font-size:13.5px;color:var(--text3);margin-bottom:28px">Accédez à votre espace sécurisé STB</p>
+
+    <!-- Error -->
+    <div th:if="${param.error}" class="alert alert-err">
+      ⚠ Identifiants incorrects. Vérifiez votre nom d'utilisateur et mot de passe.
+    </div>
+    <div th:if="${param.logout}" class="alert alert-ok">
+      ✓ Vous avez été déconnecté avec succès.
+    </div>
+
+    <!-- Form -->
+    <form th:action="@{/login}" method="post">
+      <div class="fg" style="margin-bottom:16px">
+        <label>Identifiant</label>
+        <input type="text" name="username" placeholder="votre.identifiant" autocomplete="username" required
+               style="padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;outline:none;transition:border-color .2s"
+               onfocus="this.style.borderColor='var(--stb-red)'"
+               onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div class="fg" style="margin-bottom:22px">
+        <label>Mot de passe</label>
+        <input type="password" name="password" placeholder="••••••••" autocomplete="current-password" required
+               style="padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;outline:none;transition:border-color .2s"
+               onfocus="this.style.borderColor='var(--stb-red)'"
+               onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;font-size:15px;border-radius:9px;justify-content:center">
+        Se connecter →
+      </button>
+    </form>
+
+    <!-- Demo accounts -->
+    <div style="margin-top:24px;padding:16px;background:#F8FAFF;border-radius:10px;border:1px solid var(--border)">
+      <p style="font-size:10.5px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Comptes de démonstration</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button onclick="fill('admin','admin123')" style="padding:7px 10px;background:white;border:1px solid var(--border);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--navy);transition:all .15s" onmouseover="this.style.background='var(--stb-red)';this.style.color='white'" onmouseout="this.style.background='white';this.style.color='var(--navy)'">
+          👑 Admin
+        </button>
+        <button onclick="fill('alice.info','pass123')" style="padding:7px 10px;background:white;border:1px solid var(--border);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--navy);transition:all .15s" onmouseover="this.style.background='var(--info)';this.style.color='white'" onmouseout="this.style.background='white';this.style.color='var(--navy)'">
+          📋 Info
+        </button>
+        <button onclick="fill('bob.compta','pass123')" style="padding:7px 10px;background:white;border:1px solid var(--border);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--navy);transition:all .15s" onmouseover="this.style.background='var(--ok)';this.style.color='white'" onmouseout="this.style.background='white';this.style.color='var(--navy)'">
+          💼 Compta
+        </button>
+        <button onclick="fill('carol.rh','pass123')" style="padding:7px 10px;background:white;border:1px solid var(--border);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--navy);transition:all .15s" onmouseover="this.style.background='var(--purple)';this.style.color='white'" onmouseout="this.style.background='white';this.style.color='var(--navy)'">
+          👥 RH
+        </button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px">
+      <a href="/" style="font-size:12px;color:var(--text3);text-decoration:none">← Retour au site public</a>
+    </div>
+  </div>
+</div>
+<script>
+function fill(u,p){
+  document.querySelector('input[name="username"]').value=u;
+  document.querySelector('input[name="password"]').value=p;
+}
+</script>
+</body>
+</html>

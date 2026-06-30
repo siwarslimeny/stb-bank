@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
+<head><meta charset="UTF-8"></head>
+<body>
+
+<!-- ═══════════════ SIDEBAR FRAGMENT ═══════════════ -->
+<nav th:fragment="sidebar(activePage, user)" class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">STB</div>
+    <div>
+      <div class="sb-brand-name">STB Bank</div>
+      <div class="sb-brand-sub">Espace interne</div>
+    </div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-av" th:text="${user?.initiales ?: 'U'}">TM</div>
+    <div>
+      <div class="sb-uname" th:text="${user?.nomComplet ?: 'Utilisateur'}">Tarek Mansouri</div>
+      <div class="sb-urole" th:text="${user?.role?.name() ?: ''}">ADMIN</div>
+    </div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section-lbl" sec:authorize="hasRole('ADMIN')">Principal</div>
+    <a th:href="@{/dashboard}"
+       th:class="${activePage == 'dashboard'} ? 'active' : ''"
+       sec:authorize="hasRole('ADMIN')">
+      <span class="ni">⊞</span> Tableau de bord
+    </a>
+
+    <div class="sb-section-lbl">Services</div>
+
+    <a th:href="@{/clients}"
+       th:class="${activePage == 'clients'} ? 'active' : ''"
+       sec:authorize="hasAnyRole('ADMIN','INFO')">
+      <span class="ni">👤</span> Info Clients
+      <span class="nb">Clients</span>
+    </a>
+
+    <a th:href="@{/comptes}"
+       th:class="${activePage == 'comptes'} ? 'active' : ''"
+       sec:authorize="hasAnyRole('ADMIN','COMPTABILITE')">
+      <span class="ni">🏦</span> Comptes
+      <span class="nb">Bancaires</span>
+    </a>
+
+    <a th:href="@{/transactions}"
+       th:class="${activePage == 'transactions'} ? 'active' : ''"
+       sec:authorize="hasAnyRole('ADMIN','COMPTABILITE')">
+      <span class="ni">💳</span> Transactions
+      <span class="nb">Compta</span>
+    </a>
+
+    <a th:href="@{/virements}"
+       th:class="${activePage == 'virements'} ? 'active' : ''"
+       sec:authorize="hasAnyRole('ADMIN','COMPTABILITE')">
+      <span class="ni">↗</span> Virements
+      <span class="nb">Compta</span>
+    </a>
+
+    <a th:href="@{/employes}"
+       th:class="${activePage == 'employes'} ? 'active' : ''"
+       sec:authorize="hasAnyRole('ADMIN','RH')">
+      <span class="ni">👥</span> Employés
+      <span class="nb">RH</span>
+    </a>
+
+    <div class="sb-section-lbl" sec:authorize="hasRole('ADMIN')">Administration</div>
+    <a th:href="@{/admin/utilisateurs}"
+       th:class="${activePage == 'admin'} ? 'active' : ''"
+       sec:authorize="hasRole('ADMIN')">
+      <span class="ni">⚙</span> Utilisateurs
+      <span class="nb">Admin</span>
+    </a>
+  </div>
+  <div class="sb-foot">
+    <form th:action="@{/perform-logout}" method="post" style="margin:0;width:100%">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <button type="submit" class="btn-logout">⎋ &nbsp;Déconnexion</button>
+    </form>
+  </div>
+</nav>
+
+<!-- ═══════════════ TOPBAR FRAGMENT ═══════════════ -->
+<div th:fragment="topbar(pageTitle, user)" class="topbar">
+  <div>
+    <div class="tb-title" th:text="${pageTitle}">Page</div>
+    <div class="tb-path">STB Bank › <span th:text="${pageTitle}">Page</span></div>
+  </div>
+  <div class="tb-right">
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3)">
+      <div class="sys-dot"></div> Système opérationnel
+    </div>
+    <div style="font-size:13px;color:var(--text2);font-weight:600" id="clock">--:--</div>
+    <div class="role-chip"
+         th:style="${user?.role?.name() == 'ADMIN'        ? 'background:var(--stb-red-lt);color:var(--stb-red)' :
+                     user?.role?.name() == 'INFO'          ? 'background:var(--info-bg);color:var(--info-t)' :
+                     user?.role?.name() == 'COMPTABILITE'  ? 'background:var(--ok-bg);color:var(--ok-t)' :
+                                                             'background:var(--purple-bg);color:var(--purple-t)'}"
+         th:text="${user?.role?.name() ?: 'ROLE'}">ADMIN</div>
+  </div>
+</div>
+
+<!-- ═══════════════ ALERTS FRAGMENT ═══════════════ -->
+<div th:fragment="alerts">
+  <div class="alert alert-ok" th:if="${success}" th:text="'✓  ' + ${success}"></div>
+  <div class="alert alert-err" th:if="${error}"   th:text="'✕  ' + ${error}"></div>
+</div>
+
+<script>function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR');}setInterval(tick,1000);tick();</script>
+</body>
+</html>

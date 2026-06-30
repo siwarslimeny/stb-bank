@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STB — Tableau de bord</title>
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+</head>
+<body>
+<div class="app-layout">
+
+  <div th:replace="~{fragments :: sidebar(activePage='dashboard', user=${user})}"></div>
+
+  <div class="app-main">
+    <div th:replace="~{fragments :: topbar(pageTitle='Tableau de bord', user=${user})}"></div>
+
+    <div style="padding:0 28px;padding-top:16px">
+      <div class="alert alert-ok" th:if="${success}" th:text="'✓  ' + ${success}"></div>
+      <div class="alert alert-err" th:if="${error}"   th:text="'✕  ' + ${error}"></div>
+    </div>
+
+    <div class="page-body">
+
+      <div class="welcome-banner">
+        <div style="position:relative;z-index:1">
+          <h1>Bonjour, <span th:text="${user.prenom}">Tarek</span> 👋</h1>
+          <p>Vue d'ensemble de la plateforme STB</p>
+        </div>
+        <div class="wb-badge" th:text="${user.role.name()}">ADMIN</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card sc-red">
+          <div class="si si-red">👤</div>
+          <div class="stat-val" th:text="${totalClients}">0</div>
+          <div class="stat-lbl">Clients enregistrés</div>
+          <div class="stat-delta d-up">↑ <span th:text="${clientsActifs}">0</span> actifs</div>
+        </div>
+        <div class="stat-card sc-green">
+          <div class="si si-green">💸</div>
+          <div class="stat-val" th:text="${#numbers.formatDecimal(totalCredits/1000,1,0) + 'K'}">0K</div>
+          <div class="stat-lbl">Volume crédits (DT)</div>
+          <div class="stat-delta d-up">↑ Entrées validées</div>
+        </div>
+        <div class="stat-card sc-amber">
+          <div class="si si-amber">⚠</div>
+          <div class="stat-val" th:text="${pendingVirements.size()}">0</div>
+          <div class="stat-lbl">Virements en attente</div>
+          <div class="stat-delta d-dn">À traiter</div>
+        </div>
+        <div class="stat-card sc-purple">
+          <div class="si si-purple">🏢</div>
+          <div class="stat-val" th:text="${totalEmployes}">0</div>
+          <div class="stat-lbl">Employés</div>
+          <div class="stat-delta d-up">↑ Actifs</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head">
+            <h3>Dernières transactions</h3>
+            <a th:href="@{/transactions}" class="btn btn-ghost btn-sm">Voir tout →</a>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead>
+              <tr><th>Réf.</th><th>Type</th><th>Montant</th><th>Statut</th></tr>
+              </thead>
+              <tbody>
+              <tr th:each="tx : ${recentTransactions}">
+                <td>
+                  <code style="font-size:11px;color:var(--text3);background:#F1F5F9;padding:2px 6px;border-radius:5px"
+                        th:text="${tx.reference}"></code>
+                </td>
+                <td th:text="${tx.type}"></td>
+                <td>
+                  <strong th:text="${(tx.sens != null and tx.sens.name() == 'CREDIT' ? '+' : '–') + #numbers.formatDecimal(tx.montant,1,'COMMA',0,'POINT') + ' DT'}"
+                          th:style="${tx.sens != null and tx.sens.name() == 'CREDIT'} ? 'color:var(--ok)' : 'color:var(--err)'"></strong>
+                </td>
+                <td>
+                    <span th:class="${tx.statut.name() == 'VALIDE'} ? 'badge b-ok' : (${tx.statut.name() == 'REJETE'} ? 'badge b-err' : 'badge b-warn')"
+                          th:text="${tx.statut}"></span>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(recentTransactions)}">
+                <td colspan="4" style="text-align:center;color:var(--text3);padding:20px">Aucune transaction</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Virements en attente</h3>
+            <a th:href="@{/virements}" class="btn btn-ghost btn-sm">Gérer →</a>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead>
+              <tr><th>Réf.</th><th>Bénéficiaire</th><th>Montant</th><th>Type</th></tr>
+              </thead>
+              <tbody>
+              <tr th:each="v : ${pendingVirements}">
+                <td>
+                  <code style="font-size:11px;color:var(--text3);background:#F1F5F9;padding:2px 6px;border-radius:5px"
+                        th:text="${v.reference}"></code>
+                </td>
+                <td style="font-size:12px" th:text="${v.nomBeneficiaire}"></td>
+                <td><strong th:text="${#numbers.formatDecimal(v.montant,1,'COMMA',0,'POINT') + ' DT'}"></strong></td>
+                <td><span class="badge b-warn" th:text="${v.type}"></span></td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(pendingVirements)}">
+                <td colspan="4" style="text-align:center;color:var(--text3);padding:20px">Aucun virement en attente ✓</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="card-head"><h3>Accès rapides</h3></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+            <a th:href="@{/clients}"
+               style="padding:18px 12px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border);text-align:center;text-decoration:none;display:block;transition:all .15s"
+               onmouseover="this.style.background='var(--stb-red-lt)';this.style.borderColor='var(--stb-red)'"
+               onmouseout="this.style.background='var(--bg)';this.style.borderColor='var(--border)'">
+              <div style="font-size:28px;margin-bottom:7px">👤</div>
+              <div style="font-size:12px;font-weight:700;color:var(--navy)">Clients</div>
+              <div style="font-size:10.5px;color:var(--text3)" th:text="${totalClients} + ' enregistrés'"></div>
+            </a>
+            <a th:href="@{/comptes}"
+               style="padding:18px 12px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border);text-align:center;text-decoration:none;display:block;transition:all .15s"
+               onmouseover="this.style.background='var(--info-bg)';this.style.borderColor='var(--info)'"
+               onmouseout="this.style.background='var(--bg)';this.style.borderColor='var(--border)'">
+              <div style="font-size:28px;margin-bottom:7px">🏦</div>
+              <div style="font-size:12px;font-weight:700;color:var(--navy)">Comptes</div>
+              <div style="font-size:10.5px;color:var(--text3)">Bancaires</div>
+            </a>
+            <a th:href="@{/transactions}"
+               style="padding:18px 12px;background:var(--bg);border-radius:var(--r);border:1px solid var(--border);text-align:center;text-decoration:none;display:block;transition:al

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>STB — Transaction</title>
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+</head>
+<body>
+<div class="app-layout">
+  <div th:replace="~{fragments :: sidebar(activePage='transactions', user=${user})}"></div>
+  <div class="app-main">
+    <div th:replace="~{fragments :: topbar(pageTitle=${isNew} ? 'Nouvelle transaction' : 'Modifier transaction', user=${user})}"></div>
+    <div class="page-body">
+
+      <div class="pg-hdr">
+        <div>
+          <div class="pg-title" th:text="${isNew} ? 'Enregistrer une transaction' : 'Modifier la transaction'"></div>
+          <div class="pg-sub">Opération bancaire — Comptabilité STB</div>
+        </div>
+        <a th:href="@{/transactions}" class="btn btn-ghost">← Retour</a>
+      </div>
+
+      <div class="card" style="max-width:760px">
+        <div class="card-head">
+          <h3 th:text="${isNew} ? '💳 Nouvelle opération' : '✏️ Modifier — ' + ${tx.reference}"></h3>
+        </div>
+        <div class="card-body">
+          <form th:action="${isNew} ? @{/transactions/nouvelle} : @{/transactions/{id}/modifier(id=${tx.id})}"
+                method="post" th:object="${tx}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="form-grid">
+              <div class="fg">
+                <label>Type *</label>
+                <select th:field="*{type}" required>
+                  <option th:each="t : ${T(tn.stb.bank.model.Transaction.TypeTransaction).values()}"
+                          th:value="${t}" th:text="${t}"></option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Sens *</label>
+                <select th:field="*{sens}" required>
+                  <option value="CREDIT">CREDIT (Entrée)</option>
+                  <option value="DEBIT">DEBIT (Sortie)</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Montant (DT) *</label>
+                <input type="number" th:field="*{montant}" placeholder="1000.00" min="0.01" step="0.01" required>
+                <span class="field-err" th:if="${#fields.hasErrors('montant')}" th:errors="*{montant}"></span>
+              </div>
+              <div class="fg">
+                <label>Statut *</label>
+                <select th:field="*{statut}">
+                  <option th:each="s : ${T(tn.stb.bank.model.Transaction.StatutTransaction).values()}"
+                          th:value="${s}" th:text="${s}"></option>
+                </select>
+              </div>
+              <div class="fg span2">
+                <label>Compte source</label>
+                <select th:field="*{compteSource}">
+                  <option value="">-- Sélectionner un compte --</option>
+                  <option th:each="c : ${comptes}"
+                          th:value="${c.id}"
+                          th:text="${c.numeroCompte + ' — ' + (c.client?.nomComplet ?: 'N/A') + ' (' + #numbers.formatDecimal(c.solde,1,'COMMA',2,'POINT') + ' DT)'}"
+                          th:selected="${tx.compteSource != null and tx.compteSource.id == c.id}"></option>
+                </select>
+              </div>
+              <div class="fg span2">
+                <label>Description / Libellé *</label>
+                <input type="text" th:field="*{description}" placeholder="Virement salaire, Retrait ATM…" required>
+                <span class="field-err" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+              </div>
+              <div class="fg">
+                <label>Devise</label>
+                <select th:field="*{devise}">
+                  <option value="TND">TND — Dinar tunisien</option>
+                  <option value="EUR">EUR — Euro</option>
+                  <option value="USD">USD — Dollar américain</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Frais (DT)</label>
+                <input type="number" th:field="*{frais}" placeholder="0.00" min="0" step="0.1">
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)">
+              <a th:href="@{/transactions}" class="btn btn-ghost">Annuler</a>
+              <button type="submit" class="btn btn-primary"
+                      th:text="${isNew} ? '＋ Enregistrer' : '💾 Mettre à jour'">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR');}setInterval(tick,1000);tick();</script>
+</body>
+</html>

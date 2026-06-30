@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head><meta charset="UTF-8"><title>STB — Utilisateurs</title>
+<link rel="stylesheet" th:href="@{/css/stb.css}"></head>
+<body>
+<div class="app-layout">
+  <div th:replace="~{fragments :: sidebar(activePage='admin', user=${user})}"></div>
+  <div class="app-main">
+    <div th:replace="~{fragments :: topbar(pageTitle='Administration — Utilisateurs', user=${user})}"></div>
+    <div class="page-body">
+      <div class="pg-hdr"><div><div class="pg-title">Gestion des utilisateurs système</div><div class="pg-sub">Comptes d'accès à la plateforme STB</div></div></div>
+      <div class="card">
+        <div class="card-head"><h3>Utilisateurs enregistrés</h3><span class="card-count" th:text="${utilisateurs.size()}+' comptes'"></span></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Identifiant</th><th>Nom complet</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Dernière connexion</th></tr></thead>
+            <tbody>
+              <tr th:each="u : ${utilisateurs}">
+                <td style="color:var(--text3);font-size:12px" th:text="${u.id}"></td>
+                <td><code style="background:#F1F5F9;padding:2px 7px;border-radius:5px;font-size:12px" th:text="${u.username}"></code></td>
+                <td><div style="display:flex;align-items:center;gap:9px">
+                  <div class="av" style="background:var(--stb-red-lt);color:var(--stb-red)" th:text="${u.initiales}">TM</div>
+                  <span style="font-weight:600" th:text="${u.nomComplet}"></span>
+                </div></td>
+                <td style="font-size:12px;color:var(--text3)" th:text="${u.email}"></td>
+                <td>
+                  <span th:class="${u.role.name()=='ADMIN' ? 'badge b-red' : u.role.name()=='INFO' ? 'badge b-info' : u.role.name()=='COMPTABILITE' ? 'badge b-ok' : 'badge b-purple'}"
+                        th:text="${u.role}"></span>
+                </td>
+                <td><span th:class="${u.actif ? 'badge b-ok' : 'badge b-err'}" th:text="${u.actif ? 'Actif' : 'Inactif'}"></span></td>
+                <td style="font-size:12px;color:var(--text3)" th:text="${u.lastLogin != null ? #temporals.format(u.lastLogin,'dd/MM/yyyy HH:mm') : 'Jamais'}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR');}setInterval(tick,1000);tick();</script>
+</body></html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>STB — Clients</title>
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+</head>
+<body>
+<div class="app-layout">
+  <div th:replace="~{fragments :: sidebar(activePage='clients', user=${user})}"></div>
+  <div class="app-main">
+    <div th:replace="~{fragments :: topbar(pageTitle='Service Information Clients', user=${user})}"></div>
+    <div class="page-body">
+      <div th:replace="~{fragments :: alerts}"></div>
+
+      <!-- Header -->
+      <div class="pg-hdr">
+        <div>
+          <div class="pg-title">Service Information Clients</div>
+          <div class="pg-sub">Gestion complète des dossiers clients STB</div>
+        </div>
+        <a th:href="@{/clients/nouveau}" class="btn btn-primary">＋ Nouveau client</a>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card sc-red">
+          <div class="si si-red">👤</div>
+          <div class="stat-val" th:text="${total}">0</div>
+          <div class="stat-lbl">Total clients</div>
+        </div>
+        <div class="stat-card sc-green">
+          <div class="si si-green">✅</div>
+          <div class="stat-val" th:text="${totalActifs}">0</div>
+          <div class="stat-lbl">Clients actifs</div>
+        </div>
+        <div class="stat-card sc-amber">
+          <div class="si si-amber">⏸</div>
+          <div class="stat-val" th:text="${total - totalActifs}">0</div>
+          <div class="stat-lbl">Non actifs</div>
+        </div>
+        <div class="stat-card sc-navy">
+          <div class="si si-navy">🔒</div>
+          <div class="stat-lbl" style="margin-top:8px">Accès</div>
+          <span class="badge b-red" style="margin-top:6px">ADMIN · INFO</span>
+        </div>
+      </div>
+
+      <!-- Table card -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Liste des clients</h3>
+          <span class="card-count" th:text="${clients.size()} + ' résultats'"></span>
+        </div>
+        <!-- Search bar -->
+        <div style="padding:12px 20px;border-bottom:1px solid var(--border)">
+          <form th:action="@{/clients}" method="get" style="display:flex;gap:10px;align-items:center">
+            <div class="search-wrap">
+              <span class="search-ico">🔍</span>
+              <input type="text" name="q" th:value="${q}" placeholder="Rechercher par nom, email, numéro client…">
+            </div>
+            <button type="submit" class="btn btn-navy btn-sm">Rechercher</button>
+            <a th:href="@{/clients}" class="btn btn-ghost btn-sm">Réinitialiser</a>
+          </form>
+        </div>
+        <div class="tbl-wrap">
+          <table th:if="${!#lists.isEmpty(clients)}">
+            <thead>
+              <tr>
+                <th>N° Client</th><th>Nom</th><th>Contact</th>
+                <th>Agence</th><th>Type</th><th>Statut</th><th>Inscription</th>
+                <th style="text-align:center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="c : ${clients}">
+                <td><code style="font-size:11px;color:var(--text3);background:#F1F5F9;padding:2px 7px;border-radius:5px" th:text="${c.numeroClient}"></code></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <div class="av" style="background:var(--stb-red-lt);color:var(--stb-red)" th:text="${c.initiales}">AB</div>
+                    <div>
+                      <div style="font-weight:600" th:text="${c.nomComplet}"></div>
+                      <div style="font-size:11px;color:var(--text3)" th:text="${c.email}"></div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text3)" th:text="${c.telephone}"></td>
+                <td th:text="${c.agence}"></td>
+                <td>
+                  <span th:class="${c.typeClient.name() == 'ENTREPRISE'} ? 'badge b-navy' : 'badge b-info'"
+                        th:text="${c.typeClient}"></span>
+                </td>
+                <td>
+                  <span th:class="${c.statut.name() == 'ACTIF'    ? 'badge b-ok'   :
+                                    c.statut.name() == 'BLOQUE'   ? 'badge b-err'  :
+                                    c.statut.name() == 'INACTIF'  ? 'badge b-warn' : 'badge b-gray'}"
+                        th:text="${c.statut}"></span>
+                </td>
+                <td style="font-size:12px;color:var(--text3)"
+                    th:text="${#temporals.format(c.dateInscription,'dd/MM/yyyy')}"></td>
+                <td>
+                  <div style="display:flex;gap:6px;justify-content:center">
+                    <a th:href="@{/clients/{id}(id=${c.id})}" class="btn-icon" title="Voir détail">👁</a>
+                    <a th:href="@{/clients/{id}/modifier(id=${c.id})}" class="btn-icon" title="Modifier">✏️</a>
+                    <form th:action="@{/clients/{id}/supprimer(id=${c.id})}" method="post" style="display:inline"
+                          onsubmit="return confirm('Supprimer ce client ?')">
+                      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                      <button type="submit" class="btn-icon del" title="Supprimer">🗑️</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="empty" th:if="${#lists.isEmpty(clients)}">
+            <div class="empty-icon">🔍</div>
+            <p>Aucun client trouvé</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR');}setInterval(tick,1000);tick();</script>
+</body>
+</html>

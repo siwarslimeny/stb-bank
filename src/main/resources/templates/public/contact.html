@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STB — Contact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+  <style>
+
+    :root{
+      --primary:      #0F62D6;
+      --primary-dark: #0A3F8F;
+      --primary-deep: #062A63;
+      --primary-light:#3F8DF2;
+      --sky:          #6FB6FF;
+      --tint:         #EFF5FE;
+      --tint-2:       #E3EEFC;
+      --ink:          #0B1D33;
+      --text-soft:    rgba(11,29,51,.6);
+      --line:         rgba(11,29,51,.09);
+      --white:        #FFFFFF;
+      --green:        #1AA15C;
+      --green-bg:     #E8F8EF;
+      --shadow:       0 20px 45px -24px rgba(10,42,99,.28);
+      --shadow-lg:    0 30px 70px -28px rgba(10,42,99,.38);
+      --display: "Space Grotesk","Inter",sans-serif;
+      --body:    "Inter",-apple-system,sans-serif;
+      --mono:    "IBM Plex Mono",monospace;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:var(--body);color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    :focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+    svg.icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    input,select,textarea{font-family:var(--body)}
+
+    .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);display:inline-flex;align-items:center;gap:9px;font-weight:600}
+    .eyebrow::before{content:"";width:20px;height:2px;background:var(--primary);border-radius:2px}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
+    .reveal.is-visible{opacity:1;transform:translateY(0)}
+    .reveal-left{opacity:0;transform:translateX(-32px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
+    .reveal-left.is-visible{opacity:1;transform:translateX(0)}
+    .reveal-right{opacity:0;transform:translateX(32px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
+    .reveal-right.is-visible{opacity:1;transform:translateX(0)}
+
+    .pub-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s ease,box-shadow .3s ease,padding .3s ease}
+    .pub-nav.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -22px rgba(10,42,99,.35);padding:14px 48px}
+    .pub-nav-brand{display:flex;align-items:center;gap:12px}
+    .pub-nav-logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--primary-dark),var(--primary) 55%,var(--sky));color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:14px;box-shadow:0 8px 18px -8px rgba(15,98,214,.55)}
+    .pub-nav-name{font-family:var(--display);font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.15}
+    .pub-nav-tagline{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--text-soft);text-transform:uppercase}
+    .pub-nav-links{display:flex;align-items:center;gap:32px}
+    .pub-nav-links a{font-size:14px;font-weight:500;color:var(--text-soft);position:relative;padding:4px 0;transition:color .25s ease}
+    .pub-nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;border-radius:2px;background:var(--primary);transition:width .3s ease}
+    .pub-nav-links a:hover,.pub-nav-links a.active{color:var(--ink)}
+    .pub-nav-links a:hover::after,.pub-nav-links a.active::after{width:100%}
+    .btn-espace{background:linear-gradient(135deg,var(--primary-dark),var(--primary)) !important;color:#fff !important;padding:11px 22px !important;border-radius:9px;font-size:13.5px !important;font-weight:600;box-shadow:0 10px 24px -10px rgba(15,98,214,.55);transition:transform .25s ease,box-shadow .25s ease}
+    .btn-espace::after{display:none}
+    .btn-espace:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(15,98,214,.65)}
+
+    .page-hero{position:relative;text-align:center;padding:64px 24px 70px;overflow:hidden;background:#fff}
+    .page-hero::before{content:"";position:absolute;inset:-30% -10% auto -10%;height:160%;z-index:0;background:radial-gradient(560px 380px at 50% 0%,rgba(15,98,214,.08),transparent 65%)}
+    .page-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+    .page-hero .eyebrow{justify-content:center;opacity:0;animation:fadeUp .7s .05s cubic-bezier(.16,.8,.3,1) forwards}
+    .page-hero h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,4.4vw,48px);line-height:1.08;margin:18px 0 14px;letter-spacing:-.015em;color:var(--ink);opacity:0;animation:fadeUp .7s .16s cubic-bezier(.16,.8,.3,1) forwards}
+    .page-hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--primary-deep) 0%,var(--primary) 45%,var(--sky) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .page-hero p{font-size:16px;color:var(--text-soft);margin:0;opacity:0;animation:fadeUp .7s .28s cubic-bezier(.16,.8,.3,1) forwards}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    .pub-section{padding:84px 48px}
+    .pub-section-title{max-width:580px;margin:0 0 50px}
+    .pub-section-title h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,3vw,34px);color:var(--ink);margin:14px 0 12px;letter-spacing:-.015em}
+    .pub-section-title p{font-size:15.5px;color:var(--text-soft);line-height:1.6;margin:0}
+
+    .btn-primary{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:15px 26px;border-radius:11px;font-size:14.5px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 16px 34px -14px rgba(15,98,214,.55);transition:transform .25s ease,box-shadow .25s ease}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 40px -14px rgba(15,98,214,.65)}
+
+    .pub-footer{background:var(--ink);color:rgba(255,255,255,.7);padding:40px 48px}
+    .footer-bottom{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(255,255,255,.55)}
+    .footer-bottom a{color:var(--sky);font-weight:600}
+
+    @media (max-width:980px){
+      .pub-nav{padding:14px 24px}
+      .pub-section{padding:56px 24px}
+    }
+    @media (max-width:600px){
+      .pub-nav-links a:not(.btn-espace){display:none}
+    }
+    @media (prefers-reduced-motion: reduce){
+      *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    }
+
+
+    .contact-wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:32px;max-width:1100px;margin:0 auto}
+    .status-pill{display:inline-flex;align-items:center;gap:9px;background:var(--green-bg);color:var(--green);font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:99px;margin-bottom:22px}
+    .status-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--green);position:relative}
+    .status-pill .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:var(--green);opacity:.4;animation:pulse 2s ease-out infinite}
+    .status-pill.closed{background:var(--tint-2);color:var(--text-soft)}
+    .status-pill.closed .dot{background:var(--text-soft)}
+    .status-pill.closed .dot::after{display:none}
+    @keyframes pulse{0%{transform:scale(1);opacity:.45}100%{transform:scale(2.6);opacity:0}}
+
+    .info-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;box-shadow:0 1px 2px rgba(10,42,99,.04);margin-bottom:20px}
+    .info-card h3{font-family:var(--display);font-weight:600;font-size:16.5px;color:var(--ink);margin:0 0 20px}
+    .info-row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+    .info-row:last-child{border-bottom:none;padding-bottom:0}
+    .info-row:first-child{padding-top:0}
+    .info-icon{width:40px;height:40px;border-radius:11px;background:var(--tint);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .info-label{font-size:12px;color:var(--text-soft);margin-bottom:2px}
+    .info-value{font-weight:600;color:var(--ink);font-size:14.5px}
+
+    .emergency-card{background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary-dark) 100%);border-radius:20px;padding:28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+    .emergency-card::before{content:"";position:absolute;inset:0;background:radial-gradient(280px 200px at 90% 0%,rgba(111,182,255,.22),transparent 60%)}
+    .emergency-card h4{position:relative;color:#fff;font-size:14px;font-weight:600;margin:0 0 10px;display:flex;align-items:center;gap:9px}
+    .emergency-card p{position:relative;color:rgba(255,255,255,.65);font-size:13px;margin:0 0 14px}
+    .emergency-num{position:relative;font-family:var(--mono);font-size:26px;font-weight:600;color:#fff;letter-spacing:.02em}
+
+    .form-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:36px;box-shadow:0 1px 2px rgba(10,42,99,.04)}
+    .form-card h3{font-family:var(--display);font-weight:600;font-size:18px;color:var(--ink);margin:0 0 24px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .fg{display:flex;flex-direction:column;gap:7px}
+    .fg.span2{grid-column:1/-1}
+    .fg label{font-size:12.5px;font-weight:600;color:var(--ink)}
+    .fg input,.fg select,.fg textarea{
+      border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--ink);
+      background:#fff;transition:border-color .25s ease, box-shadow .25s ease;outline:none;resize:vertical;
+    }
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(15,98,214,.12)}
+    .fg input::placeholder,.fg textarea::placeholder{color:rgba(11,29,51,.35)}
+
+    @media (max-width:900px){ .contact-wrap{grid-template-columns:1fr} .form-grid{grid-template-columns:1fr} }
+
+  </style>
+</head>
+<body>
+<nav class="pub-nav" id="nav">
+  <a href="/" class="pub-nav-brand">
+    <div class="pub-nav-logo">STB</div>
+    <div><div class="pub-nav-name">Société Tunisienne de Banque</div><div class="pub-nav-tagline">Fondée en 1957</div></div>
+  </a>
+  <div class="pub-nav-links">
+    <a href="/">Accueil</a>
+    <a href="/services">Nos Services</a>
+    <a href="/agences">Agences</a>
+    <a href="/contact" class="active">Contact</a>
+    <a href="/login" class="btn-espace">Espace Client</a>
+  </div>
+</nav>
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <span class="eyebrow">Nous sommes là</span>
+    <h1>Nous <em>contacter</em></h1>
+    <p>Notre équipe est à votre disposition 6 jours sur 7, en agence, par téléphone ou en ligne.</p>
+  </div>
+</section>
+
+<section class="pub-section">
+  <div class="contact-wrap">
+
+    <div class="reveal-left">
+      <div id="statusPill" class="status-pill"><span class="dot"></span><span id="statusText">Vérification des horaires…</span></div>
+
+      <div class="info-card">
+        <h3>Coordonnées STB</h3>
+
+        <div class="info-row">
+          <div class="info-icon"><svg class="icon" viewBox="0 0 24 24" width="20" height="20"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.79.65 2.65a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.43-1.27a2 2 0 0 1 2.11-.45c.86.31 1.75.53 2.65.65A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="info-label">Téléphone</div><div class="info-value">71 340 477</div></div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-icon"><svg class="icon" viewBox="0 0 24 24" width="20" height="20"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 6.5l9 6.5 9-6.5"/></svg></div>
+          <div><div class="info-label">Email</div><div class="info-value">contact@stb.com.tn</div></div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-icon"><svg class="icon" viewBox="0 0 24 24" width="20" height="20"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="info-label">Siège social</div><div class="info-value">Rue Hedi Nouira, 1001 Tunis</div></div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-icon"><svg class="icon" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+          <div><div class="info-label">Horaires</div><div class="info-value">Lun – Sam : 8h00 – 16h30</div></div>
+        </div>
+      </div>
+
+      <div class="emergency-card">
+        <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg> Service urgences 24h/24</h4>
+        <p>Pour opposition carte ou urgence bancaire :</p>
+        <div class="emergency-num">71 340 555</div>
+      </div>
+    </div>
+
+    <div class="form-card reveal-right">
+      <h3>Envoyer un message</h3>
+      <div class="form-grid">
+        <div class="fg"><label>Nom *</label><input type="text" placeholder="Ben Ali" required></div>
+        <div class="fg"><label>Prénom *</label><input type="text" placeholder="Ahmed" required></div>
+        <div class="fg"><label>Email *</label><input type="email" placeholder="ahmed@mail.tn" required></div>
+        <div class="fg"><label>Téléphone</label><input type="text" placeholder="22 XXX XXX"></div>
+        <div class="fg span2"><label>Sujet</label>
+          <select>
+            <option>Demande d'information</option><option>Réclamation</option>
+            <option>Ouverture de compte</option><option>Crédit</option><option>Autre</option>
+          </select>
+        </div>
+        <div class="fg span2"><label>Message *</label><textarea rows="5" placeholder="Votre message…" required></textarea></div>
+      </div>
+      <div style="margin-top:22px">
+        <button class="btn-primary" style="width:100%" onclick="alert('Message envoyé ! Nous vous répondrons sous 48h.')">Envoyer le message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="pub-footer">
+  <div class="footer-bottom">
+    <span>© 2024 Société Tunisienne de Banque. <a href="/">← Retour à l'accueil</a></span>
+    <span>Site sécurisé SSL · Banque soumise à la réglementation BCT</span>
+  </div>
+</footer>
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  (function(){
+    const now = new Date();
+    const day = now.getDay(); // 0 Sun .. 6 Sat
+    const hour = now.getHours() + now.getMinutes()/60;
+    const isOpen = day >= 1 && day <= 6 && hour >= 8 && hour < 16.5;
+    const pill = document.getElementById('statusPill');
+    const text = document.getElementById('statusText');
+    if (isOpen) {
+      text.textContent = 'Agences ouvertes actuellement';
+    } else {
+      pill.classList.add('closed');
+      text.textContent = 'Agences fermées — réouverture Lun-Sam 8h00';
+    }
+  })();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>STB — Virements</title>
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+</head>
+<body>
+<div class="app-layout">
+  <div th:replace="~{fragments :: sidebar(activePage='virements', user=${user})}"></div>
+  <div class="app-main">
+    <div th:replace="~{fragments :: topbar(pageTitle='Virements Bancaires', user=${user})}"></div>
+    <div class="page-body">
+      <div th:replace="~{fragments :: alerts}"></div>
+
+      <div class="pg-hdr">
+        <div>
+          <div class="pg-title">Gestion des Virements</div>
+          <div class="pg-sub">Ordres de virement et transferts inter-bancaires</div>
+        </div>
+        <a th:href="@{/virements/nouveau}" class="btn btn-primary">＋ Nouvel ordre</a>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Journal des virements</h3>
+          <span class="card-count" th:text="${virements.size()} + ' virements'"></span>
+        </div>
+        <div class="tbl-wrap">
+          <table th:if="${!#lists.isEmpty(virements)}">
+            <thead>
+              <tr>
+                <th>Référence</th><th>Date</th><th>Débiteur</th>
+                <th>Bénéficiaire</th><th>IBAN Créditeur</th>
+                <th>Montant</th><th>Type</th><th>Statut</th>
+                <th style="text-align:center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="v : ${virements}">
+                <td><code style="font-size:11px;color:var(--text3);background:#F1F5F9;padding:2px 7px;border-radius:5px" th:text="${v.reference}"></code></td>
+                <td style="font-size:12px;color:var(--text3)" th:text="${#temporals.format(v.dateDemande,'dd/MM/yyyy')}"></td>
+                <td style="font-size:12px" th:text="${v.compteDebiteur?.client?.nomComplet ?: '—'}"></td>
+                <td style="font-weight:600" th:text="${v.nomBeneficiaire}"></td>
+                <td><code style="font-size:10px;color:var(--text3)" th:text="${v.ibanCrediteur}"></code></td>
+                <td><strong style="color:var(--err)" th:text="${#numbers.formatDecimal(v.montant,1,'COMMA',2,'POINT') + ' DT'}"></strong></td>
+                <td><span class="badge b-info" th:text="${v.type}"></span></td>
+                <td>
+                  <span th:class="${v.statut.name() == 'EXECUTE'    ? 'badge b-ok'   :
+                                    v.statut.name() == 'REJETE'     ? 'badge b-err'  :
+                                    v.statut.name() == 'ANNULE'     ? 'badge b-gray' :
+                                    v.statut.name() == 'VALIDE'     ? 'badge b-navy' : 'badge b-warn'}"
+                        th:text="${v.statut}"></span>
+                </td>
+                <td>
+                  <div style="display:flex;gap:5px;justify-content:center">
+                    <!-- Validate/Reject only for EN_ATTENTE -->
+                    <th:block th:if="${v.statut.name() == 'EN_ATTENTE'}">
+                      <form th:action="@{/virements/{id}/valider(id=${v.id})}" method="post" style="display:inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn-icon" title="Valider" style="color:var(--ok)" onmouseover="this.style.background='var(--ok-bg)'" onmouseout="this.style.background='none'">✓</button>
+                      </form>
+                      <form th:action="@{/virements/{id}/rejeter(id=${v.id})}" method="post" style="display:inline"
+                            onsubmit="this.querySelector('input[name=motif]').value=prompt('Motif du rejet:','Dossier incomplet')||'Non précisé'">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <input type="hidden" name="motif" value="">
+                        <button type="submit" class="btn-icon del" title="Rejeter">✕</button>
+                      </form>
+                    </th:block>
+                    <form th:action="@{/virements/{id}/supprimer(id=${v.id})}" method="post" style="display:inline"
+                          onsubmit="return confirm('Supprimer ce virement ?')">
+                      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                      <button type="submit" class="btn-icon del" title="Supprimer">🗑️</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="empty" th:if="${#lists.isEmpty(virements)}">
+            <div class="empty-icon">↗</div>
+            <p>Aucun virement enregistré</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR');}setInterval(tick,1000);tick();</script>
+</body>
+</html>

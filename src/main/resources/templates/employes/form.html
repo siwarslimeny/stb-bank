@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>STB — Employé</title>
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+</head>
+<body>
+<div class="app-layout">
+  <div th:replace="~{fragments :: sidebar(activePage='employes', user=${user})}"></div>
+  <div class="app-main">
+    <div th:replace="~{fragments :: topbar(pageTitle=${isNew} ? 'Nouvel employé' : 'Modifier employé', user=${user})}"></div>
+    <div class="page-body">
+
+      <div class="pg-hdr">
+        <div>
+          <div class="pg-title" th:text="${isNew} ? 'Ajouter un employé' : 'Modifier le dossier employé'"></div>
+          <div class="pg-sub">Service Ressources Humaines — STB</div>
+        </div>
+        <a th:href="@{/employes}" class="btn btn-ghost">← Retour</a>
+      </div>
+
+      <div class="card" style="max-width:780px">
+        <div class="card-head">
+          <h3 th:text="${isNew} ? '👥 Nouveau dossier employé' : '✏️ Modifier — ' + ${employe.nomComplet}"></h3>
+        </div>
+        <div class="card-body">
+          <form th:action="${isNew} ? @{/employes/nouveau} : @{/employes/{id}/modifier(id=${employe.id})}"
+                method="post" th:object="${employe}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="form-grid">
+              <div class="fg">
+                <label>Nom *</label>
+                <input type="text" th:field="*{nom}" placeholder="Ben Ali" required>
+                <span class="field-err" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+              </div>
+              <div class="fg">
+                <label>Prénom *</label>
+                <input type="text" th:field="*{prenom}" placeholder="Ahmed" required>
+                <span class="field-err" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></span>
+              </div>
+              <div class="fg">
+                <label>Email professionnel</label>
+                <input type="email" th:field="*{email}" placeholder="prenom.nom@stb.com.tn">
+              </div>
+              <div class="fg">
+                <label>Téléphone</label>
+                <input type="text" th:field="*{telephone}" placeholder="22 XXX XXX">
+              </div>
+              <div class="fg span2">
+                <label>Poste *</label>
+                <input type="text" th:field="*{poste}" placeholder="Chef comptable, Ingénieur SI…" required>
+                <span class="field-err" th:if="${#fields.hasErrors('poste')}" th:errors="*{poste}"></span>
+              </div>
+              <div class="fg">
+                <label>Département *</label>
+                <select th:field="*{departement}" required>
+                  <option th:each="d : ${T(tn.stb.bank.model.Employe.Departement).values()}"
+                          th:value="${d}" th:text="${d}"></option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Type de contrat</label>
+                <select th:field="*{contrat}">
+                  <option th:each="c : ${T(tn.stb.bank.model.Employe.TypeContrat).values()}"
+                          th:value="${c}" th:text="${c}"></option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Statut</label>
+                <select th:field="*{statut}">
+                  <option th:each="s : ${T(tn.stb.bank.model.Employe.StatutEmploye).values()}"
+                          th:value="${s}" th:text="${s}"></option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Salaire (DT)</label>
+                <input type="number" th:field="*{salaire}" placeholder="3500" min="0" step="50">
+              </div>
+              <div class="fg">
+                <label>Date d'embauche</label>
+                <input type="date" th:field="*{dateEmbauche}">
+              </div>
+              <div class="fg">
+                <label>Date fin de contrat</label>
+                <input type="date" th:field="*{dateFinContrat}">
+              </div>
+              <div class="fg">
+                <label>Agence</label>
+                <select th:field="*{agence}">
+                  <option value="">-- Sélectionner --</option>
+                  <option th:each="a : ${ {'Tunis Centre','La Marsa','Ariana','Sfax','Sousse','Nabeul'} }"
+                          th:value="${a}" th:text="${a}"></option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>CIN</label>
+                <input type="text" th:field="*{cin}" placeholder="08 XXX XXX">
+              </div>
+              <div class="fg">
+                <label>Date de naissance</label>
+                <input type="date" th:field="*{dateNaissance}">
+              </div>
+              <div class="fg span2">
+                <label>Adresse</label>
+                <input type="text" th:field="*{adresse}" placeholder="12, Rue de la République, Tunis">
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)">
+              <a th:href="@{/employes}" class="btn btn-ghost">Annuler</a>
+              <button type="submit" class="btn btn-primary"
+                      th:text="${isNew} ? '＋ Créer le dossier' : '💾 Enregistrer'">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR');}setInterval(tick,1000);tick();</script>
+</body>
+</html>

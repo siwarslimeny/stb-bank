@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STB — Société Tunisienne de Banque</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+  <style>
+    /* ============================================================
+       STB — design system v2
+       Direction: premium digital-bank. Clean white canvas, a single
+       confident blue gradient, generous spacing, soft elevation.
+       Signature element: a stacked "carte bancaire" hero visual
+       instead of a generic logo mark — the product itself becomes
+       the image.
+       ============================================================ */
+
+    :root{
+      --primary:      #0F62D6;
+      --primary-dark: #0A3F8F;
+      --primary-deep: #062A63;
+      --primary-light:#3F8DF2;
+      --sky:          #6FB6FF;
+      --tint:         #EFF5FE;
+      --tint-2:       #E3EEFC;
+      --ink:          #0B1D33;
+      --text-soft:    rgba(11,29,51,.6);
+      --line:         rgba(11,29,51,.09);
+      --white:        #FFFFFF;
+      --shadow:       0 20px 45px -24px rgba(10,42,99,.28);
+      --shadow-lg:    0 30px 70px -28px rgba(10,42,99,.38);
+
+      --display: "Space Grotesk", "Inter", sans-serif;
+      --body:    "Inter", -apple-system, sans-serif;
+      --mono:    "IBM Plex Mono", monospace;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:var(--body);color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    :focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+    svg.icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+    .eyebrow{
+      font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--primary);display:inline-flex;align-items:center;gap:9px;font-weight:600;
+    }
+    .eyebrow::before{content:"";width:20px;height:2px;background:var(--primary);border-radius:2px}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
+    .reveal.is-visible{opacity:1;transform:translateY(0)}
+
+    /* ============================================================
+       NAVBAR
+       ============================================================ */
+    .pub-nav{
+      position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+      padding:20px 48px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+      border-bottom:1px solid transparent;transition:border-color .3s ease, box-shadow .3s ease, padding .3s ease;
+    }
+    .pub-nav.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -22px rgba(10,42,99,.35);padding:14px 48px}
+    .pub-nav-brand{display:flex;align-items:center;gap:12px}
+    .pub-nav-logo{
+      width:40px;height:40px;border-radius:11px;
+      background:linear-gradient(135deg,var(--primary-dark),var(--primary) 55%,var(--sky));
+      color:#fff;display:flex;align-items:center;justify-content:center;
+      font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.01em;
+      box-shadow:0 8px 18px -8px rgba(15,98,214,.55);
+    }
+    .pub-nav-name{font-family:var(--display);font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.15}
+    .pub-nav-tagline{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--text-soft);text-transform:uppercase}
+    .pub-nav-links{display:flex;align-items:center;gap:32px}
+    .pub-nav-links a{font-size:14px;font-weight:500;color:var(--text-soft);position:relative;padding:4px 0;transition:color .25s ease}
+    .pub-nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;border-radius:2px;background:var(--primary);transition:width .3s ease}
+    .pub-nav-links a:hover,.pub-nav-links a.active{color:var(--ink)}
+    .pub-nav-links a:hover::after,.pub-nav-links a.active::after{width:100%}
+    .btn-espace{
+      background:linear-gradient(135deg,var(--primary-dark),var(--primary)) !important;color:#fff !important;
+      padding:11px 22px !important;border-radius:9px;font-size:13.5px !important;font-weight:600;
+      box-shadow:0 10px 24px -10px rgba(15,98,214,.55);transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .btn-espace::after{display:none}
+    .btn-espace:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(15,98,214,.65)}
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero{
+      position:relative;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:40px;
+      padding:28px 48px 96px;overflow:hidden;background:#FFFFFF;
+    }
+    .hero-content{position:relative;z-index:2;max-width:600px}
+    .hero-badge{
+      font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;
+      color:var(--primary-dark);background:var(--tint);border:1px solid var(--tint-2);border-radius:99px;
+      display:inline-block;padding:8px 16px;margin-bottom:26px;
+      opacity:0;animation:fadeUp .7s .1s cubic-bezier(.16,.8,.3,1) forwards;
+    }
+    .hero h1{
+      font-family:var(--display);font-weight:700;font-size:clamp(38px,4.4vw,56px);line-height:1.06;
+      margin:0 0 22px;letter-spacing:-.015em;color:var(--primary-dark);
+    }
+    .hero h1 .line{display:block;overflow:hidden}
+    .hero h1 .line span{
+      display:block;opacity:0;transform:translateY(105%);animation:lineUp .8s cubic-bezier(.16,.8,.3,1) forwards;
+      background:linear-gradient(120deg,var(--primary-deep) 0%,var(--primary) 45%,var(--sky) 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--primary-dark);
+    }
+    .hero h1 .line:nth-child(1) span{animation-delay:.22s}
+    .hero h1 .line:nth-child(2) span{animation-delay:.34s}
+    .hero h1 em{ font-style:normal; }
+    .hero > .hero-content > p{font-size:17px;line-height:1.65;color:var(--text-soft);max-width:480px;margin:0 0 36px;
+      opacity:0;animation:fadeUp .7s .5s cubic-bezier(.16,.8,.3,1) forwards}
+    .hero-ctas{display:flex;gap:14px;margin-bottom:56px;opacity:0;animation:fadeUp .7s .62s cubic-bezier(.16,.8,.3,1) forwards}
+    .btn-hero-primary{
+      background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:16px 28px;
+      border-radius:11px;font-size:14.5px;font-weight:600;display:inline-flex;align-items:center;gap:8px;
+      box-shadow:0 16px 34px -14px rgba(15,98,214,.55);transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .btn-hero-primary:hover{transform:translateY(-3px);box-shadow:0 22px 40px -14px rgba(15,98,214,.65)}
+    .btn-hero-ghost{
+      padding:16px 28px;border-radius:11px;font-size:14.5px;font-weight:600;color:var(--ink);
+      border:1.5px solid var(--line);transition:border-color .25s ease, background .25s ease;
+    }
+    .btn-hero-ghost:hover{border-color:var(--primary);background:var(--tint)}
+
+    .hero-stats{display:grid;grid-template-columns:repeat(4,auto);gap:0;border-top:1px solid var(--line);padding-top:28px;
+      opacity:0;animation:fadeUp .7s .74s cubic-bezier(.16,.8,.3,1) forwards}
+    .hero-stats > div{padding-right:30px;margin-right:30px;border-right:1px solid var(--line)}
+    .hero-stats > div:last-child{border-right:none;margin-right:0;padding-right:0}
+    .hero-stat-val{font-family:var(--mono);font-weight:600;font-size:21px;color:var(--ink)}
+    .hero-stat-lbl{font-size:11.5px;color:var(--text-soft);margin-top:4px}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes lineUp{to{opacity:1;transform:translateY(0)}}
+
+    /* ---------- hero visual: stacked bank card (signature element) ---------- */
+    .hero-visual{position:relative;z-index:2;height:460px;display:flex;align-items:center;justify-content:center}
+    .bank-card{
+      position:absolute;width:360px;aspect-ratio:1.62;border-radius:22px;padding:28px 30px;color:#fff;
+      box-shadow:var(--shadow-lg);opacity:0;
+    }
+    .bank-card.card-1{
+      background:linear-gradient(135deg,var(--primary-deep) 0%,var(--primary-dark) 45%,var(--primary-light) 90%,var(--sky) 130%);
+      z-index:3;overflow:hidden;
+      animation:cardIn1 .9s .25s cubic-bezier(.16,.8,.3,1) forwards, cardFloat1 7s 1.2s ease-in-out infinite;
+    }
+    .bank-card.card-2{
+      width:330px;
+      background:linear-gradient(135deg,#0A3F8F 0%,#1A5DC2 60%,#3F8DF2 130%);
+      z-index:2;
+      animation:cardIn2 .9s .45s cubic-bezier(.16,.8,.3,1) forwards, cardFloat2 8s 1.4s ease-in-out infinite;
+    }
+    .bank-card.card-3{
+      width:300px;
+      background:linear-gradient(135deg,#062A63 0%,#0F62D6 70%,#6FB6FF 140%);
+      z-index:1;
+      animation:cardIn3 .9s .6s cubic-bezier(.16,.8,.3,1) forwards, cardFloat3 9s 1.6s ease-in-out infinite;
+    }
+    @keyframes cardIn1{from{opacity:0;transform:rotate(0deg) translateY(16px) translateX(0)}to{opacity:1;transform:rotate(-4deg) translateY(-26px) translateX(-58px)}}
+    @keyframes cardIn2{from{opacity:0;transform:rotate(0deg) translateY(16px)}to{opacity:.92;transform:rotate(4deg) translateY(14px) translateX(28px)}}
+    @keyframes cardIn3{from{opacity:0;transform:rotate(0deg) translateY(16px)}to{opacity:.7;transform:rotate(11deg) translateY(58px) translateX(78px)}}
+
+    @keyframes cardFloat1{0%,100%{transform:rotate(-4deg) translateY(-26px) translateX(-58px)}50%{transform:rotate(-6deg) translateY(-40px) translateX(-58px)}}
+    @keyframes cardFloat2{0%,100%{transform:rotate(4deg) translateY(14px) translateX(28px)}50%{transform:rotate(6deg) translateY(2px) translateX(28px)}}
+    @keyframes cardFloat3{0%,100%{transform:rotate(11deg) translateY(58px) translateX(78px)}50%{transform:rotate(13deg) translateY(46px) translateX(78px)}}
+
+    .bank-card.card-1::after{
+      content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+      background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);
+      transform:skewX(-18deg);animation:shine 3.4s 1.6s ease-in-out infinite;
+    }
+    @keyframes shine{0%{left:-60%}35%{left:130%}100%{left:130%}}
+    .bank-card-top{display:flex;align-items:center;justify-content:space-between}
+    .bank-card-mark{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.02em}
+    .bank-card-chip{
+      width:38px;height:28px;border-radius:6px;margin-top:26px;
+      background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,255,255,.6));
+      position:relative;
+    }
+    .bank-card-chip::before{content:"";position:absolute;inset:5px;border:1px solid rgba(10,42,99,.25);border-radius:3px}
+    .bank-card-number{font-family:var(--mono);font-size:16px;letter-spacing:.12em;margin-top:24px;color:rgba(255,255,255,.94)}
+    .bank-card-bottom{display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px}
+    .bank-card-bottom .label{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:3px}
+    .bank-card-bottom .val{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.92)}
+    .bank-card-wave{position:absolute;right:18px;bottom:18px;opacity:.85}
+
+    /* ============================================================
+       SECTIONS — generic
+       ============================================================ */
+    .pub-section{padding:104px 48px}
+    .pub-section-title{max-width:580px;margin:0 0 56px}
+    .pub-section-title h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,3vw,38px);color:var(--ink);margin:14px 0 12px;letter-spacing:-.015em}
+    .pub-section-title p{font-size:16px;color:var(--text-soft);line-height:1.6;margin:0}
+
+    /* ---------- promo banners ---------- */
+    .promo-banner{
+      display:flex;align-items:center;justify-content:space-between;gap:24px;border-radius:20px;
+      background:linear-gradient(120deg,var(--primary-deep) 0%, var(--primary-dark) 55%, var(--primary-light) 130%);
+      color:#fff;padding:38px 44px;margin-bottom:28px;box-shadow:var(--shadow);
+    }
+    .promo-banner-text h3{font-family:var(--display);font-weight:700;font-size:21px;margin:0 0 8px}
+    .promo-banner-text p{font-size:14.5px;color:rgba(255,255,255,.78);margin:0;max-width:480px;line-height:1.55}
+    .promo-banner-badge{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary-deep);background:#fff;border-radius:99px;padding:11px 20px;white-space:nowrap}
+
+    /* ---------- promo carousel: full-bleed, large cards, continuous auto-scroll loop ---------- */
+    .promo-carousel{
+      width:100vw;position:relative;left:50%;right:50%;margin:0 -50vw 28px;overflow:hidden;
+      -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+      mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+    }
+    .promo-track{display:flex;gap:28px;width:max-content;padding:6px 0 18px;animation:scrollCards 36s linear infinite}
+    .promo-carousel:hover .promo-track{animation-play-state:paused}
+    @keyframes scrollCards{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    .promo-card{
+      display:flex;flex-direction:column;flex:0 0 auto;width:min(86vw,420px);min-height:300px;
+      background:#fff;border:1px solid var(--line);border-radius:20px;
+      padding:36px 32px;box-shadow:0 1px 2px rgba(10,42,99,.04);
+      transition:transform .3s cubic-bezier(.16,.8,.3,1), box-shadow .3s ease, border-color .3s ease;
+    }
+    .promo-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:var(--tint-2)}
+    .promo-icon{
+      width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;margin-bottom:22px;
+      box-shadow:0 10px 22px -10px rgba(15,98,214,.5);
+    }
+    .promo-icon svg{width:26px;height:26px}
+    .promo-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:9px;font-weight:600}
+    .promo-card h3{font-family:var(--display);font-weight:600;font-size:20px;color:var(--ink);margin:0 0 12px}
+    .promo-card p{font-size:14.5px;color:var(--text-soft);line-height:1.65;margin:0 0 22px;flex-grow:1}
+    .promo-cta{font-size:13.5px;font-weight:600;color:var(--primary-dark);display:inline-flex;align-items:center;gap:6px;transition:gap .25s ease}
+    .promo-card:hover .promo-cta{gap:10px}
+
+    @media (prefers-reduced-motion: reduce){
+      .promo-track{animation:none}
+    }
+
+    /* ============================================================
+       SERVICES — matching card language
+       ============================================================ */
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .service-card{
+      background:var(--tint);border-radius:18px;padding:30px 28px;border:1px solid transparent;
+      transition:border-color .3s ease, background .3s ease, transform .3s ease;
+    }
+    .service-card:hover{background:#fff;border-color:var(--tint-2);box-shadow:var(--shadow);transform:translateY(-4px)}
+    .service-icon{
+      width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+      background:#fff;color:var(--primary-dark);margin-bottom:18px;box-shadow:0 4px 14px -6px rgba(10,42,99,.18);
+    }
+    .service-card h3{font-family:var(--display);font-weight:600;font-size:17px;color:var(--ink);margin:0 0 8px}
+    .service-card p{font-size:13.8px;color:var(--text-soft);line-height:1.6;margin:0}
+
+    /* ============================================================
+       STATS BAND
+       ============================================================ */
+    .stats-band{background:linear-gradient(135deg,var(--primary-deep) 0%, var(--primary-dark) 100%);padding:88px 48px;position:relative;border-radius:32px;margin:0 24px;overflow:hidden}
+    .stats-band::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 320px at 85% 15%, rgba(111,182,255,.18), transparent 60%)}
+    .stats-band-head{text-align:center;margin-bottom:50px;position:relative}
+    .stats-band-head .eyebrow{color:var(--sky)}
+    .stats-band-head .eyebrow::before{background:var(--sky)}
+    .stats-band-head h2{font-family:var(--display);font-weight:700;font-size:30px;color:#fff;margin:10px 0 6px}
+    .stats-band-head p{color:rgba(255,255,255,.6);font-size:14px;margin:0}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);max-width:920px;margin:0 auto;position:relative}
+    .stats-row > div{text-align:center;padding:0 18px;border-right:1px solid rgba(255,255,255,.14)}
+    .stats-row > div:last-child{border-right:none}
+    .stat-num{font-family:var(--mono);font-weight:600;font-size:42px;color:#fff}
+    .stat-lbl{font-size:12.5px;color:rgba(255,255,255,.6);margin-top:6px}
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .pub-footer{background:var(--ink);color:rgba(255,255,255,.7);padding:80px 48px 28px;margin-top:40px}
+    .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;max-width:1180px;margin:0 auto 50px}
+    .footer-brand{display:flex;flex-direction:column;gap:14px}
+    .footer-brand-top{display:flex;align-items:center;gap:11px}
+    .footer-brand p{font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.45);max-width:300px;margin:0}
+    .footer-col h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);margin:0 0 16px}
+    .footer-col a{display:block;font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:11px;transition:color .2s ease}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1180px;margin:0 auto;padding-top:26px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.4)}
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;padding:24px 28px 50px}
+      .hero-visual{height:300px;order:-1;transform:scale(.78)}
+      .hero-stats{grid-template-columns:repeat(2,auto);row-gap:18px}
+      .promo-grid{grid-template-columns:1fr}
+      .services-grid{grid-template-columns:1fr 1fr}
+      .stats-row{grid-template-columns:repeat(2,1fr);row-gap:30px}
+      .stats-row > div:nth-child(2){border-right:none}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .pub-nav-links{gap:18px}
+      .pub-nav{padding:14px 24px}
+      .pub-section{padding:64px 24px}
+      .stats-band{margin:0;border-radius:0}
+    }
+    @media (max-width:600px){
+      .pub-nav-links a:not(.btn-espace){display:none}
+      .promo-banner{flex-direction:column;align-items:flex-start}
+      .services-grid{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+      .hero h1 .line span{opacity:1;transform:none}
+      .bank-card.card-1{opacity:1;transform:rotate(-4deg) translateY(-26px) translateX(-58px);animation:none}
+      .bank-card.card-2{opacity:.92;transform:rotate(4deg) translateY(14px) translateX(28px);animation:none}
+      .bank-card.card-3{opacity:.7;transform:rotate(11deg) translateY(58px) translateX(78px);animation:none}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="pub-nav" id="nav">
+  <a href="/" class="pub-nav-brand">
+    <div class="pub-nav-logo">STB</div>
+    <div>
+      <div class="pub-nav-name">Société Tunisienne de Banque</div>
+      <div class="pub-nav-tagline">Fondée en 1957</div>
+    </div>
+  </a>
+  <div class="pub-nav-links">
+    <a href="/" class="active">Accueil</a>
+    <a href="/services">Nos Services</a>
+    <a href="/agences">Agences</a>
+    <a href="/contact">Contact</a>
+    <a href="/login" class="btn-espace">Espace Client</a>
+  </div>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Banque de confiance depuis 1957</div>
+    <h1>
+      <span class="line"><span>Votre banque,</span></span>
+      <span class="line"><span>votre <em>avenir</em>.</span></span>
+    </h1>
+    <p>La STB vous accompagne dans tous vos projets financiers avec des solutions bancaires modernes, sécurisées et adaptées à vos besoins.</p>
+    <div class="hero-ctas">
+      <a href="/login" class="btn-hero-primary">Accéder à mon espace →</a>
+      <a href="/services" class="btn-hero-ghost">Découvrir nos offres</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-val">1.2M+</div><div class="hero-stat-lbl">Clients en Tunisie</div></div>
+      <div><div class="hero-stat-val">148</div><div class="hero-stat-lbl">Agences</div></div>
+      <div><div class="hero-stat-val">64+</div><div class="hero-stat-lbl">Années d'expérience</div></div>
+      <div><div class="hero-stat-val">24/7</div><div class="hero-stat-lbl">Service client</div></div>
+    </div>
+  </div>
+
+  <!-- Signature visual: stacked bank card, not a logo -->
+  <div class="hero-visual">
+    <div class="bank-card card-3">
+      <div class="bank-card-top">
+        <span class="bank-card-mark">STB</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.6" stroke-linecap="round"><path d="M5 12a7 7 0 0 1 14 0"/><path d="M2 12a10 10 0 0 1 20 0"/></svg>
+      </div>
+      <div class="bank-card-chip"></div>
+      <div class="bank-card-number">•••• •••• •••• 1198</div>
+      <div class="bank-card-bottom">
+        <div><div class="label">Titulaire</div><div class="val">CARTE CLASSIC</div></div>
+        <div><div class="label">Validité</div><div class="val">03/28</div></div>
+      </div>
+    </div>
+    <div class="bank-card card-2">
+      <div class="bank-card-top">
+        <span class="bank-card-mark">STB</span>
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.82)" stroke-width="1.6" stroke-linecap="round"><path d="M5 12a7 7 0 0 1 14 0"/><path d="M2 12a10 10 0 0 1 20 0"/></svg>
+      </div>
+      <div class="bank-card-chip"></div>
+      <div class="bank-card-number">•••• •••• •••• 7734</div>
+      <div class="bank-card-bottom">
+        <div><div class="label">Titulaire</div><div class="val">CARTE PREMIUM</div></div>
+        <div><div class="label">Validité</div><div class="val">06/29</div></div>
+      </div>
+    </div>
+    <div class="bank-card card-1">
+      <div class="bank-card-top">
+        <span class="bank-card-mark">STB</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"><path d="M5 12a7 7 0 0 1 14 0"/><path d="M2 12a10 10 0 0 1 20 0"/><circle cx="12" cy="12" r="1.4" fill="rgba(255,255,255,.85)" stroke="none"/></svg>
+      </div>
+      <div class="bank-card-chip"></div>
+      <div class="bank-card-number">•••• •••• •••• 4521</div>
+      <div class="bank-card-bottom">
+        <div><div class="label">Titulaire</div><div class="val">CARTE GOLD</div></div>
+        <div><div class="label">Validité</div><div class="val">09/29</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ OFFRES ══════ -->
+<section class="pub-section" style="background:var(--tint);border-radius:32px;margin:0 24px">
+  <div class="pub-section-title reveal">
+    <span class="eyebrow">Offres du moment</span>
+    <h2>Des solutions pensées pour chaque projet</h2>
+    <p>Découvrez nos promotions et nouveaux produits financiers exclusifs.</p>
+  </div>
+
+  <div class="promo-banner reveal">
+    <div class="promo-banner-text">
+      <h3>Offre spéciale — Crédit Auto à 6.5%</h3>
+      <p>Financez votre voiture neuve ou d'occasion avec un taux préférentiel jusqu'au 30 juin. Réponse en 48h.</p>
+    </div>
+    <div class="promo-banner-badge">Taux à partir de 6.5%</div>
+  </div>
+
+  <div class="promo-carousel reveal">
+    <div class="promo-track">
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
+        <div class="promo-tag">Nouveau</div>
+        <h3>Compte Épargne Plus+</h3>
+        <p>Profitez d'un taux d'intérêt jusqu'à 8% annuel sur vos économies. Sans frais de gestion.</p>
+        <span class="promo-cta">En savoir plus →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="3"/><path d="M5 21V11M19 21V11M9 21v-6h6v6"/><path d="M3 11l9-7 9 7"/></svg></div>
+        <div class="promo-tag">Immobilier</div>
+        <h3>Crédit Maison STB</h3>
+        <p>Réalisez votre rêve avec notre crédit immobilier jusqu'à 300 000 DT sur 25 ans.</p>
+        <span class="promo-cta">Simuler mon crédit →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/></svg></div>
+        <div class="promo-tag">Premium</div>
+        <h3>Carte STB Gold</h3>
+        <p>Plafonds élevés, assurance voyage et assistance 24h/24 partout dans le monde.</p>
+        <span class="promo-cta">Commander ma carte →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+        <div class="promo-tag">Digital</div>
+        <h3>STB Mobile Banking</h3>
+        <p>Gérez vos comptes, effectuez des virements et payez vos factures depuis votre smartphone.</p>
+        <span class="promo-cta">Télécharger l'app →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M6 20V12M11 20V7M16 20v-9M21 20V4"/><path d="M3 9l4-4 4 3 5-6"/></svg></div>
+        <div class="promo-tag">Investissement</div>
+        <h3>Portefeuille Boursier</h3>
+        <p>Investissez en bourse tunisienne avec l'accompagnement de nos experts financiers.</p>
+        <span class="promo-cta">Commencer →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="9" height="18"/><rect x="13" y="9" width="7" height="12"/><path d="M7 7h2M7 11h2M7 15h2"/></svg></div>
+        <div class="promo-tag">Entreprises</div>
+        <h3>Solutions PME &amp; TPE</h3>
+        <p>Crédit professionnel, domiciliation salaires et solutions complètes pour les entreprises.</p>
+        <span class="promo-cta">Solutions entreprise →</span>
+      </a>
+
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
+        <div class="promo-tag">Nouveau</div>
+        <h3>Compte Épargne Plus+</h3>
+        <p>Profitez d'un taux d'intérêt jusqu'à 8% annuel sur vos économies. Sans frais de gestion.</p>
+        <span class="promo-cta">En savoir plus →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="3"/><path d="M5 21V11M19 21V11M9 21v-6h6v6"/><path d="M3 11l9-7 9 7"/></svg></div>
+        <div class="promo-tag">Immobilier</div>
+        <h3>Crédit Maison STB</h3>
+        <p>Réalisez votre rêve avec notre crédit immobilier jusqu'à 300 000 DT sur 25 ans.</p>
+        <span class="promo-cta">Simuler mon crédit →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/></svg></div>
+        <div class="promo-tag">Premium</div>
+        <h3>Carte STB Gold</h3>
+        <p>Plafonds élevés, assurance voyage et assistance 24h/24 partout dans le monde.</p>
+        <span class="promo-cta">Commander ma carte →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+        <div class="promo-tag">Digital</div>
+        <h3>STB Mobile Banking</h3>
+        <p>Gérez vos comptes, effectuez des virements et payez vos factures depuis votre smartphone.</p>
+        <span class="promo-cta">Télécharger l'app →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M6 20V12M11 20V7M16 20v-9M21 20V4"/><path d="M3 9l4-4 4 3 5-6"/></svg></div>
+        <div class="promo-tag">Investissement</div>
+        <h3>Portefeuille Boursier</h3>
+        <p>Investissez en bourse tunisienne avec l'accompagnement de nos experts financiers.</p>
+        <span class="promo-cta">Commencer →</span>
+      </a>
+      <a href="/services" class="promo-card">
+        <div class="promo-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="9" height="18"/><rect x="13" y="9" width="7" height="12"/><path d="M7 7h2M7 11h2M7 15h2"/></svg></div>
+        <div class="promo-tag">Entreprises</div>
+        <h3>Solutions PME &amp; TPE</h3>
+        <p>Crédit professionnel, domiciliation salaires et solutions complètes pour les entreprises.</p>
+        <span class="promo-cta">Solutions entreprise →</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="promo-banner reveal">
+    <div class="promo-banner-text">
+      <h3>Nouveauté — Paiement par QR Code</h3>
+      <p>Payez rapidement et en toute sécurité avec STB Pay dans 500 commerces partenaires.</p>
+    </div>
+    <div class="promo-banner-badge">Disponible maintenant</div>
+  </div>
+</section>
+
+<!-- ══════ SERVICES ══════ -->
+<section class="pub-section">
+  <div class="pub-section-title reveal">
+    <span class="eyebrow">Nos services</span>
+    <h2>Une gamme bancaire complète</h2>
+    <p>Des solutions financières pensées pour les particuliers comme pour les entreprises.</p>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card"><div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div><h3>Comptes Bancaires</h3><p>Compte courant, épargne, à terme. Ouvrez votre compte en ligne en 10 minutes.</p></div>
+    <div class="service-card"><div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/></svg></div><h3>Cartes Bancaires</h3><p>Carte Visa, Mastercard, prépayée. Acceptée dans plus de 160 pays.</p></div>
+    <div class="service-card"><div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></div><h3>Crédits</h3><p>Crédit immobilier, auto, personnel, professionnel. Taux compétitifs.</p></div>
+    <div class="service-card"><div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M6 20V12M11 20V7M16 20v-9M21 20V4"/><path d="M3 9l4-4 4 3 5-6"/></svg></div><h3>Placements</h3><p>Comptes épargne, OPCVM, bons de trésor. Faites fructifier votre argent.</p></div>
+    <div class="service-card"><div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div><h3>Banque Digitale</h3><p>Application mobile, virements en ligne, paiement factures 24h/24.</p></div>
+    <div class="service-card"><div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div><h3>Change &amp; International</h3><p>Opérations de change, virements internationaux, financement commerce extérieur.</p></div>
+  </div>
+</section>
+
+<!-- ══════ STATS ══════ -->
+<section class="stats-band">
+  <div class="stats-band-head reveal">
+    <span class="eyebrow">Notre empreinte</span>
+    <h2>STB en chiffres</h2>
+    <p>Leader bancaire en Tunisie depuis plus de six décennies.</p>
+  </div>
+  <div class="stats-row reveal" id="statsRow">
+    <div><div class="stat-num" data-target="1957" data-format="plain">0</div><div class="stat-lbl">Année de fondation</div></div>
+    <div><div class="stat-num" data-target="148" data-format="plain">0</div><div class="stat-lbl">Agences en Tunisie</div></div>
+    <div><div class="stat-num" data-target="300" data-format="plus">0</div><div class="stat-lbl">GAB &amp; DAB</div></div>
+    <div><div class="stat-num" data-target="3500" data-format="plain">0</div><div class="stat-lbl">Collaborateurs</div></div>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="pub-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-brand-top">
+        <div class="pub-nav-logo">STB</div>
+        <div>
+          <h3 style="margin:0;font-family:var(--display);font-weight:600;color:#fff;font-size:15px">Société Tunisienne de Banque</h3>
+          <p style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin:2px 0 0">Fondée en 1957</p>
+        </div>
+      </div>
+      <p>Votre partenaire financier de confiance. Banque publique tunisienne dédiée au développement économique du pays.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="/services">Comptes bancaires</a>
+      <a href="/services">Cartes bancaires</a>
+      <a href="/services">Crédits</a>
+      <a href="/services">Placements</a>
+      <a href="/services">Banque digitale</a>
+    </div>
+    <div class="footer-col">
+      <h4>La banque</h4>
+      <a href="#">À propos de la STB</a>
+      <a href="#">Nos agences</a>
+      <a href="#">Carrières</a>
+      <a href="#">Presse</a>
+      <a href="#">RSE</a>
+    </div>
+    <div class="footer-col">
+      <h4>Assistance</h4>
+      <a href="/contact">Nous contacter</a>
+      <a href="#">FAQ</a>
+      <a href="#">Centre d'aide</a>
+      <a href="#">Signaler une fraude</a>
+      <a href="#">Mentions légales</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Société Tunisienne de Banque. Tous droits réservés.</span>
+    <span>Site sécurisé SSL · Banque soumise à la réglementation BCT</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  const statNums = document.querySelectorAll('.stat-num');
+  let countersStarted = false;
+  function animateCounters() {
+    if (countersStarted) return;
+    countersStarted = true;
+    statNums.forEach(el => {
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.format === 'plus' ? '+' : '';
+      const duration = 1400;
+      const start = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + (p === 1 ? suffix : '');
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+  const statsRow = document.getElementById('statsRow');
+  if (statsRow) {
+    const statsIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { animateCounters(); statsIo.disconnect(); } });
+    }, { threshold: 0.3 });
+    statsIo.observe(statsRow);
+  }
+</script>
+
+</body>
+</html>

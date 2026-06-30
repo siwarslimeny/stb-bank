@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head><meta charset="UTF-8"><title>STB — Nouveau compte</title>
+<link rel="stylesheet" th:href="@{/css/stb.css}"></head>
+<body>
+<div class="app-layout">
+  <div th:replace="~{fragments :: sidebar(activePage='comptes', user=${user})}"></div>
+  <div class="app-main">
+    <div th:replace="~{fragments :: topbar(pageTitle='Nouveau compte bancaire', user=${user})}"></div>
+    <div class="page-body">
+      <div class="pg-hdr"><div><div class="pg-title">Ouvrir un compte bancaire</div></div><a th:href="@{/comptes}" class="btn btn-ghost">← Retour</a></div>
+      <div class="card" style="max-width:680px">
+        <div class="card-head"><h3>🏦 Formulaire d'ouverture</h3></div>
+        <div class="card-body">
+          <form th:action="@{/comptes/nouveau}" method="post" th:object="${compte}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="form-grid">
+              <div class="fg span2"><label>Client titulaire *</label>
+                <select th:field="*{client}" required>
+                  <option value="">-- Sélectionner un client --</option>
+                  <option th:each="cl : ${clients}" th:value="${cl.id}" th:text="${cl.numeroClient + ' — ' + cl.nomComplet}"></option>
+                </select>
+              </div>
+              <div class="fg"><label>N° Compte *</label><input type="text" th:field="*{numeroCompte}" placeholder="10011234560001" required></div>
+              <div class="fg"><label>IBAN *</label><input type="text" th:field="*{iban}" placeholder="TN5910011234560001" required></div>
+              <div class="fg"><label>RIB</label><input type="text" th:field="*{rib}" placeholder="10011234560001"></div>
+              <div class="fg"><label>Type de compte</label>
+                <select th:field="*{typeCompte}">
+                  <option th:each="t : ${T(tn.stb.bank.model.CompteBancaire.TypeCompte).values()}" th:value="${t}" th:text="${t}"></option>
+                </select>
+              </div>
+              <div class="fg"><label>Solde initial (DT)</label><input type="number" th:field="*{solde}" placeholder="0.00" step="0.01"></div>
+              <div class="fg"><label>Devise</label>
+                <select th:field="*{devise}">
+                  <option value="TND">TND</option><option value="EUR">EUR</option><option value="USD">USD</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)">
+              <a th:href="@{/comptes}" class="btn btn-ghost">Annuler</a>
+              <button type="submit" class="btn btn-primary">＋ Ouvrir le compte</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR');}setInterval(tick,1000);tick();</script>
+</body></html>

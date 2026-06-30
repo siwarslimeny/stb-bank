@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STB — Nos Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/stb.css}">
+  <style>
+
+    :root{
+      --primary:      #0F62D6;
+      --primary-dark: #0A3F8F;
+      --primary-deep: #062A63;
+      --primary-light:#3F8DF2;
+      --sky:          #6FB6FF;
+      --tint:         #EFF5FE;
+      --tint-2:       #E3EEFC;
+      --ink:          #0B1D33;
+      --text-soft:    rgba(11,29,51,.6);
+      --line:         rgba(11,29,51,.09);
+      --white:        #FFFFFF;
+      --green:        #1AA15C;
+      --green-bg:     #E8F8EF;
+      --shadow:       0 20px 45px -24px rgba(10,42,99,.28);
+      --shadow-lg:    0 30px 70px -28px rgba(10,42,99,.38);
+      --display: "Space Grotesk","Inter",sans-serif;
+      --body:    "Inter",-apple-system,sans-serif;
+      --mono:    "IBM Plex Mono",monospace;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:var(--body);color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    :focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+    svg.icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    input,select,textarea{font-family:var(--body)}
+
+    .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);display:inline-flex;align-items:center;gap:9px;font-weight:600}
+    .eyebrow::before{content:"";width:20px;height:2px;background:var(--primary);border-radius:2px}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
+    .reveal.is-visible{opacity:1;transform:translateY(0)}
+    .reveal-left{opacity:0;transform:translateX(-32px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
+    .reveal-left.is-visible{opacity:1;transform:translateX(0)}
+    .reveal-right{opacity:0;transform:translateX(32px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
+    .reveal-right.is-visible{opacity:1;transform:translateX(0)}
+
+    .pub-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s ease,box-shadow .3s ease,padding .3s ease}
+    .pub-nav.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -22px rgba(10,42,99,.35);padding:14px 48px}
+    .pub-nav-brand{display:flex;align-items:center;gap:12px}
+    .pub-nav-logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--primary-dark),var(--primary) 55%,var(--sky));color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:14px;box-shadow:0 8px 18px -8px rgba(15,98,214,.55)}
+    .pub-nav-name{font-family:var(--display);font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.15}
+    .pub-nav-tagline{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--text-soft);text-transform:uppercase}
+    .pub-nav-links{display:flex;align-items:center;gap:32px}
+    .pub-nav-links a{font-size:14px;font-weight:500;color:var(--text-soft);position:relative;padding:4px 0;transition:color .25s ease}
+    .pub-nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;border-radius:2px;background:var(--primary);transition:width .3s ease}
+    .pub-nav-links a:hover,.pub-nav-links a.active{color:var(--ink)}
+    .pub-nav-links a:hover::after,.pub-nav-links a.active::after{width:100%}
+    .btn-espace{background:linear-gradient(135deg,var(--primary-dark),var(--primary)) !important;color:#fff !important;padding:11px 22px !important;border-radius:9px;font-size:13.5px !important;font-weight:600;box-shadow:0 10px 24px -10px rgba(15,98,214,.55);transition:transform .25s ease,box-shadow .25s ease}
+    .btn-espace::after{display:none}
+    .btn-espace:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(15,98,214,.65)}
+
+    .page-hero{position:relative;text-align:center;padding:64px 24px 70px;overflow:hidden;background:#fff}
+    .page-hero::before{content:"";position:absolute;inset:-30% -10% auto -10%;height:160%;z-index:0;background:radial-gradient(560px 380px at 50% 0%,rgba(15,98,214,.08),transparent 65%)}
+    .page-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+    .page-hero .eyebrow{justify-content:center;opacity:0;animation:fadeUp .7s .05s cubic-bezier(.16,.8,.3,1) forwards}
+    .page-hero h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,4.4vw,48px);line-height:1.08;margin:18px 0 14px;letter-spacing:-.015em;color:var(--ink);opacity:0;animation:fadeUp .7s .16s cubic-bezier(.16,.8,.3,1) forwards}
+    .page-hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--primary-deep) 0%,var(--primary) 45%,var(--sky) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .page-hero p{font-size:16px;color:var(--text-soft);margin:0;opacity:0;animation:fadeUp .7s .28s cubic-bezier(.16,.8,.3,1) forwards}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    .pub-section{padding:84px 48px}
+    .pub-section-title{max-width:580px;margin:0 0 50px}
+    .pub-section-title h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,3vw,34px);color:var(--ink);margin:14px 0 12px;letter-spacing:-.015em}
+    .pub-section-title p{font-size:15.5px;color:var(--text-soft);line-height:1.6;margin:0}
+
+    .btn-primary{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:15px 26px;border-radius:11px;font-size:14.5px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 16px 34px -14px rgba(15,98,214,.55);transition:transform .25s ease,box-shadow .25s ease}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 40px -14px rgba(15,98,214,.65)}
+
+    .pub-footer{background:var(--ink);color:rgba(255,255,255,.7);padding:40px 48px}
+    .footer-bottom{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(255,255,255,.55)}
+    .footer-bottom a{color:var(--sky);font-weight:600}
+
+    @media (max-width:980px){
+      .pub-nav{padding:14px 24px}
+      .pub-section{padding:56px 24px}
+    }
+    @media (max-width:600px){
+      .pub-nav-links a:not(.btn-espace){display:none}
+    }
+    @media (prefers-reduced-motion: reduce){
+      *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    }
+
+
+    .feature-row{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;border-radius:24px;overflow:hidden;margin-bottom:24px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(10,42,99,.04);transition:box-shadow .35s ease, transform .35s ease}
+    .feature-row:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+    .feature-row.reverse{grid-template-columns:1fr 1fr}
+    .feature-row.reverse .feature-visual{order:2}
+    .feature-visual{position:relative;height:100%;min-height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-deep),var(--primary-dark) 55%,var(--primary-light))}
+    .feature-visual.alt{background:linear-gradient(135deg,#062A63,#0F62D6 65%,#6FB6FF)}
+    .feature-visual.alt2{background:linear-gradient(135deg,#0A3F8F,#3F8DF2 70%,#8FC6F0)}
+    .feature-visual::before{content:"";position:absolute;inset:0;background:radial-gradient(220px 220px at 70% 20%,rgba(255,255,255,.18),transparent 60%)}
+    .feature-visual svg{width:84px;height:84px;stroke:#fff;stroke-width:1.2;position:relative;z-index:1;opacity:.92}
+    .feature-text{padding:42px 46px}
+    .feature-text .promo-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);font-weight:600;margin-bottom:10px;display:block}
+    .feature-text h3{font-family:var(--display);font-weight:700;font-size:24px;color:var(--ink);margin:0 0 12px;letter-spacing:-.01em}
+    .feature-text p{font-size:15px;color:var(--text-soft);line-height:1.65;margin:0 0 20px}
+    .feature-text .promo-cta{font-size:13.5px;font-weight:600;color:var(--primary-dark);display:inline-flex;align-items:center;gap:6px;transition:gap .25s ease}
+    .feature-row:hover .promo-cta{gap:10px}
+
+    .bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:22px}
+    .bento .service-card.featured{grid-column:span 2;display:flex;align-items:center;gap:24px;background:linear-gradient(120deg,var(--tint),var(--tint-2))}
+    .bento .service-card.featured .service-icon{margin-bottom:0;flex-shrink:0}
+    .service-card{background:var(--tint);border-radius:18px;padding:30px 28px;border:1px solid transparent;transition:border-color .3s ease,background .3s ease,transform .3s ease}
+    .service-card:hover{background:#fff;border-color:var(--tint-2);box-shadow:var(--shadow);transform:translateY(-4px)}
+    .service-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--primary-dark);margin-bottom:18px;box-shadow:0 4px 14px -6px rgba(10,42,99,.18)}
+    .service-card h3{font-family:var(--display);font-weight:600;font-size:17px;color:var(--ink);margin:0 0 8px}
+    .service-card p{font-size:13.8px;color:var(--text-soft);line-height:1.6;margin:0}
+
+    @media (max-width:860px){
+      .feature-row,.feature-row.reverse{grid-template-columns:1fr}
+      .feature-row.reverse .feature-visual{order:0}
+      .feature-visual{min-height:160px}
+      .bento{grid-template-columns:1fr}
+      .bento .service-card.featured{grid-column:span 1;flex-direction:column;align-items:flex-start}
+    }
+
+  </style>
+</head>
+<body>
+<nav class="pub-nav" id="nav">
+  <a href="/" class="pub-nav-brand">
+    <div class="pub-nav-logo">STB</div>
+    <div><div class="pub-nav-name">Société Tunisienne de Banque</div><div class="pub-nav-tagline">Fondée en 1957</div></div>
+  </a>
+  <div class="pub-nav-links">
+    <a href="/">Accueil</a>
+    <a href="/services" class="active">Nos Services</a>
+    <a href="/agences">Agences</a>
+    <a href="/contact">Contact</a>
+    <a href="/login" class="btn-espace">Espace Client</a>
+  </div>
+</nav>
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <span class="eyebrow">Catalogue complet</span>
+    <h1>Nos <em>services</em></h1>
+    <p>Une gamme complète de produits financiers pour tous vos besoins, particuliers comme entreprises.</p>
+  </div>
+</section>
+
+<section class="pub-section" style="padding-top:20px">
+  <div class="pub-section-title reveal">
+    <span class="eyebrow">Offres vedettes</span>
+    <h2>Trois solutions phares</h2>
+    <p>Nos produits les plus demandés, présentés en détail.</p>
+  </div>
+
+  <div class="feature-row reveal-left">
+    <div class="feature-visual">
+      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>
+    </div>
+    <div class="feature-text">
+      <span class="promo-tag">Immobilier</span>
+      <h3>Crédit Immobilier STB</h3>
+      <p>Jusqu'à 300 000 DT sur 25 ans, taux fixe ou révisable selon votre profil. Dossier étudié et réponse sous 72h par un conseiller dédié.</p>
+      <a href="#" class="promo-cta">Simuler mon crédit →</a>
+    </div>
+  </div>
+
+  <div class="feature-row reverse reveal-right">
+    <div class="feature-visual alt">
+      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="7" rx="1.5"/><path d="M5 10V7a2 2 0 0 1 2-2h2M19 10V7a2 2 0 0 0-2-2h-2"/><circle cx="7.5" cy="20" r="1.5"/><circle cx="16.5" cy="20" r="1.5"/></svg>
+    </div>
+    <div class="feature-text">
+      <span class="promo-tag">Auto</span>
+      <h3>Crédit Auto toutes marques</h3>
+      <p>Financez votre véhicule neuf ou d'occasion avec notre offre à 6.5% TEG. Simulation immédiate, sans frais de dossier cachés.</p>
+      <a href="#" class="promo-cta">Découvrir l'offre →</a>
+    </div>
+  </div>
+
+  <div class="feature-row reveal-left">
+    <div class="feature-visual alt2">
+      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
+    </div>
+    <div class="feature-text">
+      <span class="promo-tag">Premium</span>
+      <h3>Pack STB Privilège</h3>
+      <p>Carte Gold, conseiller dédié, assurance voyage premium et plafonds élevés — l'expérience bancaire haut de gamme.</p>
+      <a href="#" class="promo-cta">En savoir plus →</a>
+    </div>
+  </div>
+</section>
+
+<section class="pub-section" style="background:var(--tint);border-radius:32px;margin:0 24px 24px">
+  <div class="pub-section-title reveal">
+    <span class="eyebrow">Toutes nos solutions</span>
+    <h2>Le quotidien, simplifié</h2>
+    <p>Des produits du compte courant au transfert international.</p>
+  </div>
+  <div class="bento reveal">
+    <div class="service-card featured">
+      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
+      <div><h3>Compte Courant</h3><p>Gérez vos opérations quotidiennes avec notre compte courant sans frais de tenue minimum.</p></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></div>
+      <h3>Livret d'Épargne</h3><p>Taux attractif, disponibilité permanente et sans plafond.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/></svg></div>
+      <h3>Carte Visa Classique</h3><p>Paiement en ligne et en magasin, retraits GAB, contrôle via app mobile.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M6 20V12M11 20V7M16 20v-9M21 20V4"/><path d="M3 9l4-4 4 3 5-6"/></svg></div>
+      <h3>Bon de Trésor</h3><p>Placement sécurisé garanti par l'État tunisien.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+      <h3>STB Mobile</h3><p>Virements, consultation, paiement de factures — depuis votre smartphone.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+      <h3>Transfert International</h3><p>Envoi et réception de fonds depuis/vers plus de 150 pays.</p>
+    </div>
+  </div>
+</section>
+<footer class="pub-footer">
+  <div class="footer-bottom">
+    <span>© 2024 Société Tunisienne de Banque. <a href="/">← Retour à l'accueil</a></span>
+    <span>Site sécurisé SSL · Banque soumise à la réglementation BCT</span>
+  </div>
+</footer>
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+</script>
+</body>
+</html>
