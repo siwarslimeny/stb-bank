@@ -198,6 +198,100 @@
     .pub-section-title h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,3vw,38px);color:var(--ink);margin:14px 0 12px;letter-spacing:-.015em}
     .pub-section-title p{font-size:16px;color:var(--text-soft);line-height:1.6;margin:0}
 
+    /* ============================================================
+       BRAND STRIP — full-bleed band, same width as the navbar,
+       displays one full-width banner image above the
+       "Offres du moment" section
+       ============================================================ */
+    .brand-strip{
+      width:100vw;
+      position:relative;
+      left:50%;
+      right:50%;
+      margin:-60px -50vw 0;   /* 👈 remonte davantage (était -35px) pour coller au hero */
+      height:200px;            /* 👈 agrandi (était 140px) */
+      overflow:hidden;
+      background:linear-gradient(120deg,var(--primary-deep) 0%,var(--primary-dark) 45%,var(--primary) 80%,var(--sky) 130%);
+    }
+    .brand-strip-img{width:100%;height:100%;object-fit:cover;display:block}
+
+    /* ---------- offers title row + auto cross-fading visual ---------- */
+    .pub-section-title-row{
+      display:flex;
+      align-items:center;        /* 👈 était flex-end, change l'alignement vertical */
+      justify-content:space-between;
+      gap:48px;
+      margin-bottom:56px;
+      flex-wrap:wrap;
+    }
+
+    .pub-section-title-row .pub-section-title{margin-bottom:0}
+    .offers-visual{
+      position:relative;
+      width:480px;   /* 👈 plus large */
+      height:330px;  /* 👈 plus haut */
+      flex-shrink:0;
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow:var(--shadow-lg);
+      background: transparent !important;
+    }
+    .offer-slide{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      animation: slideFade 9s infinite;
+      will-change: opacity;
+    }
+    .offer-slide{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      animation: slideFade 9s infinite;
+      will-change: opacity;
+    }
+
+    /* 👇 AJOUT : décalage pour que chaque image prenne son tour */
+    .offer-slide-1{ animation-delay: 0s; }
+    .offer-slide-2{ animation-delay: 2.25s; }
+    .offer-slide-3{ animation-delay: 4.5s; }
+    .offer-slide-4{ animation-delay: 6.75s; }
+    .offer-slide-5{ animation-delay: 4.5s; }
+    .offer-slide-6{ animation-delay: 6.75s; }
+
+
+    .offer-slide img{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 1;
+      display: block;
+    }
+    .offer-slide-tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+    .offer-slide-title{font-family:var(--display);font-weight:600;font-size:18px}
+    @keyframes slideFade{
+      0%   {opacity:0}
+      8%   {opacity:1}
+      30%  {opacity:1}
+      38%  {opacity:0}
+      100% {opacity:0}
+    }
+    @media (max-width:980px){
+      .offers-visual{width:100%;height:220px} /* était 180px */
+    }
+    /* ---------- QR payment visual ---------- */
+    .qr-visual{
+      flex-shrink:0;width:104px;height:104px;background:#fff;border-radius:14px;padding:10px;
+      display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(7,1fr);gap:2px;
+      box-shadow:0 12px 26px -12px rgba(0,0,0,.35);
+    }
+    .qr-visual span{background:var(--primary-deep);border-radius:1px}
+    .qr-visual span.off{background:transparent}
+    .promo-banner.with-qr{gap:32px}
+    .promo-banner.with-qr .promo-banner-text{flex:1}
+
     /* ---------- promo banners ---------- */
     .promo-banner{
       display:flex;align-items:center;justify-content:space-between;gap:24px;border-radius:20px;
@@ -240,6 +334,17 @@
     @media (prefers-reduced-motion: reduce){
       .promo-track{animation:none}
     }
+    .pub-nav-logo-img{
+      width:40px;
+      height:40px;
+      object-fit:contain;
+      border-radius:10px; /* optionnel */
+    }
+    .pub-section-services{padding-top:40px}
+    .services-title-row{display:flex;align-items:center;gap:48px;margin-bottom:56px;flex-wrap:wrap}
+    .services-title-row .pub-section-title{margin-bottom:0;max-width:520px}
+    .services-image{flex-shrink:0;width:300px;height:220px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg)}
+    .services-image img{width:100%;height:100%;object-fit:cover;display:block}
 
     /* ============================================================
        SERVICES — matching card language
@@ -302,6 +407,12 @@
       .pub-nav{padding:14px 24px}
       .pub-section{padding:64px 24px}
       .stats-band{margin:0;border-radius:0}
+      .pub-section-title-row{flex-direction:column;align-items:flex-start}
+      .offers-visual{width:100%;height:180px}
+      .promo-banner.with-qr{flex-wrap:wrap}
+      .services-title-row{flex-direction:column;align-items:flex-start}
+      .services-image{width:100%;height:200px}
+      .brand-strip{height:90px}
     }
     @media (max-width:600px){
       .pub-nav-links a:not(.btn-espace){display:none}
@@ -316,6 +427,8 @@
       .bank-card.card-1{opacity:1;transform:rotate(-4deg) translateY(-26px) translateX(-58px);animation:none}
       .bank-card.card-2{opacity:.92;transform:rotate(4deg) translateY(14px) translateX(28px);animation:none}
       .bank-card.card-3{opacity:.7;transform:rotate(11deg) translateY(58px) translateX(78px);animation:none}
+      .offer-slide{animation:none;opacity:0;transform:none}
+      .offer-slide-1{opacity:1}
     }
   </style>
 </head>
@@ -323,7 +436,7 @@
 
 <nav class="pub-nav" id="nav">
   <a href="/" class="pub-nav-brand">
-    <div class="pub-nav-logo">STB</div>
+    <img src="/images/logo.jpg" alt="STB Logo" class="pub-nav-logo-img">
     <div>
       <div class="pub-nav-name">Société Tunisienne de Banque</div>
       <div class="pub-nav-tagline">Fondée en 1957</div>
@@ -334,7 +447,7 @@
     <a href="/services">Nos Services</a>
     <a href="/agences">Agences</a>
     <a href="/contact">Contact</a>
-    <a href="/login" class="btn-espace">Espace Client</a>
+    <a href="/login" class="btn-espace">Accès Interne</a>
   </div>
 </nav>
 
@@ -400,12 +513,49 @@
   </div>
 </section>
 
+<!-- ══════ BRAND STRIP — full width band, same length as the navbar, one banner image ══════ -->
+<div class="brand-strip reveal">
+  <!-- drop one full-width banner image at /images/brand-strip.jpg (recommended ~1920x280px) -->
+  <img th:src="@{/images/rrrrr.jpg}" src="/images/rrrrr.jpg" alt="STB" class="brand-strip-img">
+</div>
+
 <!-- ══════ OFFRES ══════ -->
-<section class="pub-section" style="background:var(--tint);border-radius:32px;margin:0 24px">
-  <div class="pub-section-title reveal">
-    <span class="eyebrow">Offres du moment</span>
-    <h2>Des solutions pensées pour chaque projet</h2>
-    <p>Découvrez nos promotions et nouveaux produits financiers exclusifs.</p>
+<section class="pub-section" style="background:var(--tint);border-radius:32px;margin:0 24px;padding-bottom:56px">
+  <div class="pub-section-title-row reveal">
+    <div class="pub-section-title">
+      <span class="eyebrow">Offres du moment</span>
+      <h2>Des solutions pensées pour chaque projet</h2>
+      <p>Découvrez nos promotions et nouveaux produits financiers exclusifs.</p>
+    </div>
+    <!-- auto cross-fading visual: each slide appears then disappears in turn -->
+    <!-- auto cross-fading visual: each slide appears then disappears in turn -->
+    <div class="offers-visual" aria-hidden="true">
+
+      <div class="offer-slide offer-slide-1">
+        <img src="/images/rr.jpg" alt="">
+      </div>
+
+      <div class="offer-slide offer-slide-2">
+        <img src="/images/rrr.jpg" alt="">
+      </div>
+
+      <div class="offer-slide offer-slide-3">
+        <img src="/images/hh.jpg" alt="">
+      </div>
+
+      <div class="offer-slide offer-slide-4">
+        <img src="/images/jj.jpg" alt="">
+      </div>
+
+      <div class="offer-slide offer-slide-5">
+        <img src="/images/bb.jpg" alt="">
+      </div>
+
+      <div class="offer-slide offer-slide-6">
+        <img src="/images/kk.jpg" alt="">
+      </div>
+
+    </div>
   </div>
 
   <div class="promo-banner reveal">
@@ -506,21 +656,36 @@
     </div>
   </div>
 
-  <div class="promo-banner reveal">
+  <div class="promo-banner with-qr reveal">
     <div class="promo-banner-text">
       <h3>Nouveauté — Paiement par QR Code</h3>
       <p>Payez rapidement et en toute sécurité avec STB Pay dans 500 commerces partenaires.</p>
+    </div>
+    <div class="qr-visual" aria-hidden="true">
+      <span></span><span></span><span></span><span class="off"></span><span></span><span></span><span></span>
+      <span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span>
+      <span></span><span></span><span></span><span class="off"></span><span></span><span></span><span></span>
+      <span class="off"></span><span class="off"></span><span class="off"></span><span></span><span class="off"></span><span class="off"></span><span class="off"></span>
+      <span></span><span></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span>
+      <span></span><span class="off"></span><span></span><span class="off"></span><span class="off"></span><span></span><span></span>
+      <span></span><span></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span>
     </div>
     <div class="promo-banner-badge">Disponible maintenant</div>
   </div>
 </section>
 
 <!-- ══════ SERVICES ══════ -->
-<section class="pub-section">
-  <div class="pub-section-title reveal">
-    <span class="eyebrow">Nos services</span>
-    <h2>Une gamme bancaire complète</h2>
-    <p>Des solutions financières pensées pour les particuliers comme pour les entreprises.</p>
+<section class="pub-section pub-section-services">
+  <div class="services-title-row reveal">
+    <!-- drop your image at /images/services-hero.jpg -->
+    <div class="services-image">
+      <img th:src="@{/images/ll.jpg}" src="/images/ll.jpg" alt="Conseillers STB">
+    </div>
+    <div class="pub-section-title">
+      <span class="eyebrow">Nos services</span>
+      <h2>Une gamme bancaire complète</h2>
+      <p>Des solutions financières pensées pour les particuliers comme pour les entreprises.</p>
+    </div>
   </div>
   <div class="services-grid reveal">
     <div class="service-card"><div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div><h3>Comptes Bancaires</h3><p>Compte courant, épargne, à terme. Ouvrez votre compte en ligne en 10 minutes.</p></div>

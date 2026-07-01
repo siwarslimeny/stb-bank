@@ -52,7 +52,19 @@
     .pub-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s ease,box-shadow .3s ease,padding .3s ease}
     .pub-nav.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -22px rgba(10,42,99,.35);padding:14px 48px}
     .pub-nav-brand{display:flex;align-items:center;gap:12px}
-    .pub-nav-logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--primary-dark),var(--primary) 55%,var(--sky));color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:14px;box-shadow:0 8px 18px -8px rgba(15,98,214,.55)}
+    .pub-nav-logo{
+      width:40px;height:40px;border-radius:11px;
+      background:linear-gradient(135deg,var(--primary-dark),var(--primary) 55%,var(--sky));
+      color:#fff;display:flex;align-items:center;justify-content:center;
+      font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.01em;
+      box-shadow:0 8px 18px -8px rgba(15,98,214,.55);
+    }
+    .pub-nav-logo-img{
+      width:40px;
+      height:40px;
+      object-fit:contain;
+      border-radius:10px; /* optionnel */
+    }
     .pub-nav-name{font-family:var(--display);font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.15}
     .pub-nav-tagline{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--text-soft);text-transform:uppercase}
     .pub-nav-links{display:flex;align-items:center;gap:32px}
@@ -64,14 +76,101 @@
     .btn-espace::after{display:none}
     .btn-espace:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(15,98,214,.65)}
 
-    .page-hero{position:relative;text-align:center;padding:64px 24px 70px;overflow:hidden;background:#fff}
-    .page-hero::before{content:"";position:absolute;inset:-30% -10% auto -10%;height:160%;z-index:0;background:radial-gradient(560px 380px at 50% 0%,rgba(15,98,214,.08),transparent 65%)}
-    .page-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
-    .page-hero .eyebrow{justify-content:center;opacity:0;animation:fadeUp .7s .05s cubic-bezier(.16,.8,.3,1) forwards}
-    .page-hero h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,4.4vw,48px);line-height:1.08;margin:18px 0 14px;letter-spacing:-.015em;color:var(--ink);opacity:0;animation:fadeUp .7s .16s cubic-bezier(.16,.8,.3,1) forwards}
-    .page-hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--primary-deep) 0%,var(--primary) 45%,var(--sky) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-    .page-hero p{font-size:16px;color:var(--text-soft);margin:0;opacity:0;animation:fadeUp .7s .28s cubic-bezier(.16,.8,.3,1) forwards}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    /* ── PAGE HERO avec image floutée ── */
+    .page-hero {
+      position: relative;
+      text-align: center;
+      padding: 24px;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Couche 1 : image de fond floutée */
+    .page-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: url("/images/stb.jpg");
+      background-size: cover;
+      background-position: center center;
+      filter: brightness(0.72);
+      transform: scale(1.02);
+    }
+
+    /* Couche 2 : overlay dégradé bleu par-dessus */
+    .page-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+              160deg,
+              rgba(6,42,99,.42) 0%,
+              rgba(15,98,214,.28) 50%,
+              rgba(6,42,99,.48) 100%
+      );
+    }
+
+    /* Contenu par-dessus les deux couches */
+    .page-hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    .page-hero .eyebrow {
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp .7s .05s cubic-bezier(.16,.8,.3,1) forwards;
+      color: rgba(255,255,255,.72);
+    }
+
+    .page-hero .eyebrow::before {
+      background: rgba(255,255,255,.72);
+    }
+
+    .page-hero h1 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(48px, 7vw, 84px);
+      line-height: 1.04;
+      margin: 24px 0 22px;
+      letter-spacing: -.025em;
+      color: #ffffff;
+      opacity: 0;
+      animation: fadeUp .7s .16s cubic-bezier(.16,.8,.3,1) forwards;
+    }
+
+    .page-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, #ffffff 0%, var(--sky) 55%, #b8d8ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-hero p {
+      font-size: 17px;
+      color: rgba(255,255,255,.72);
+      margin: 0;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp .7s .28s cubic-bezier(.16,.8,.3,1) forwards;
+    }
+
+    /* Fallback si pas d'image : dégradé seul */
+    .page-hero.no-img::before {
+      background-image: linear-gradient(135deg, #062A63 0%, #0F62D6 50%, #3F8DF2 100%);
+      filter: none;
+      transform: none;
+    }
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
     .pub-section{padding:84px 48px}
     .pub-section-title{max-width:580px;margin:0 0 50px}
@@ -97,9 +196,9 @@
     }
 
 
-    .agences-stats{display:flex;gap:40px;justify-content:center;margin:-24px auto 56px;flex-wrap:wrap}
+    .agences-stats{display:flex;gap:40px;justify-content:center;margin: -85px auto 56px;flex-wrap:wrap}
     .agences-stats div{text-align:center}
-    .agences-stats .num{font-family:var(--mono);font-weight:600;font-size:26px;color:var(--primary-dark)}
+    .agences-stats .num{font-family:var(--mono);font-weight:600;font-size:26px;color:var(--white)}
     .agences-stats .lbl{font-size:12px;color:var(--text-soft);margin-top:2px}
 
     .agence-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
@@ -123,7 +222,7 @@
 <body>
 <nav class="pub-nav" id="nav">
   <a href="/" class="pub-nav-brand">
-    <div class="pub-nav-logo">STB</div>
+    <img src="/images/logo.jpg" alt="STB Logo" class="pub-nav-logo-img">
     <div><div class="pub-nav-name">Société Tunisienne de Banque</div><div class="pub-nav-tagline">Fondée en 1957</div></div>
   </a>
   <div class="pub-nav-links">
@@ -131,7 +230,7 @@
     <a href="/services">Nos Services</a>
     <a href="/agences" class="active">Agences</a>
     <a href="/contact">Contact</a>
-    <a href="/login" class="btn-espace">Espace Client</a>
+    <a href="/login" class="btn-espace">Accès Interne</a>
   </div>
 </nav>
 <section class="page-hero">

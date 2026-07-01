@@ -6,7 +6,7 @@
   <title>STB — Nos Services</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/stb.css}">
   <style>
 
@@ -49,10 +49,23 @@
     .reveal-right{opacity:0;transform:translateX(32px);transition:opacity .8s cubic-bezier(.16,.8,.3,1),transform .8s cubic-bezier(.16,.8,.3,1)}
     .reveal-right.is-visible{opacity:1;transform:translateX(0)}
 
+    /* ── NAVBAR ── */
     .pub-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s ease,box-shadow .3s ease,padding .3s ease}
     .pub-nav.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -22px rgba(10,42,99,.35);padding:14px 48px}
     .pub-nav-brand{display:flex;align-items:center;gap:12px}
-    .pub-nav-logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--primary-dark),var(--primary) 55%,var(--sky));color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:14px;box-shadow:0 8px 18px -8px rgba(15,98,214,.55)}
+    .pub-nav-logo{
+      width:40px;height:40px;border-radius:11px;
+      background:linear-gradient(135deg,var(--primary-dark),var(--primary) 55%,var(--sky));
+      color:#fff;display:flex;align-items:center;justify-content:center;
+      font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.01em;
+      box-shadow:0 8px 18px -8px rgba(15,98,214,.55);
+    }
+    .pub-nav-logo-img{
+      width:40px;
+      height:40px;
+      object-fit:contain;
+      border-radius:10px; /* optionnel */
+    }
     .pub-nav-name{font-family:var(--display);font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.15}
     .pub-nav-tagline{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--text-soft);text-transform:uppercase}
     .pub-nav-links{display:flex;align-items:center;gap:32px}
@@ -64,15 +77,103 @@
     .btn-espace::after{display:none}
     .btn-espace:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(15,98,214,.65)}
 
-    .page-hero{position:relative;text-align:center;padding:64px 24px 70px;overflow:hidden;background:#fff}
-    .page-hero::before{content:"";position:absolute;inset:-30% -10% auto -10%;height:160%;z-index:0;background:radial-gradient(560px 380px at 50% 0%,rgba(15,98,214,.08),transparent 65%)}
-    .page-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
-    .page-hero .eyebrow{justify-content:center;opacity:0;animation:fadeUp .7s .05s cubic-bezier(.16,.8,.3,1) forwards}
-    .page-hero h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,4.4vw,48px);line-height:1.08;margin:18px 0 14px;letter-spacing:-.015em;color:var(--ink);opacity:0;animation:fadeUp .7s .16s cubic-bezier(.16,.8,.3,1) forwards}
-    .page-hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--primary-deep) 0%,var(--primary) 45%,var(--sky) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-    .page-hero p{font-size:16px;color:var(--text-soft);margin:0;opacity:0;animation:fadeUp .7s .28s cubic-bezier(.16,.8,.3,1) forwards}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    /* ── PAGE HERO avec image floutée ── */
+    .page-hero {
+      position: relative;
+      text-align: center;
+      padding: 24px;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
+    /* Couche 1 : image de fond floutée */
+    .page-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: url("/images/stb.jpg");
+      background-size: cover;
+      background-position: center center;
+      filter: brightness(0.72);
+      transform: scale(1.02);
+    }
+
+    /* Couche 2 : overlay dégradé bleu par-dessus */
+    .page-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+              160deg,
+              rgba(6,42,99,.42) 0%,
+              rgba(15,98,214,.28) 50%,
+              rgba(6,42,99,.48) 100%
+      );
+    }
+
+    /* Contenu par-dessus les deux couches */
+    .page-hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    .page-hero .eyebrow {
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp .7s .05s cubic-bezier(.16,.8,.3,1) forwards;
+      color: rgba(255,255,255,.72);
+    }
+
+    .page-hero .eyebrow::before {
+      background: rgba(255,255,255,.72);
+    }
+
+    .page-hero h1 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(48px, 7vw, 84px);
+      line-height: 1.04;
+      margin: 24px 0 22px;
+      letter-spacing: -.025em;
+      color: #ffffff;
+      opacity: 0;
+      animation: fadeUp .7s .16s cubic-bezier(.16,.8,.3,1) forwards;
+    }
+
+    .page-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, #ffffff 0%, var(--sky) 55%, #b8d8ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-hero p {
+      font-size: 17px;
+      color: rgba(255,255,255,.72);
+      margin: 0;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp .7s .28s cubic-bezier(.16,.8,.3,1) forwards;
+    }
+
+    /* Fallback si pas d'image : dégradé seul */
+    .page-hero.no-img::before {
+      background-image: linear-gradient(135deg, #062A63 0%, #0F62D6 50%, #3F8DF2 100%);
+      filter: none;
+      transform: none;
+    }
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── SECTIONS ── */
     .pub-section{padding:84px 48px}
     .pub-section-title{max-width:580px;margin:0 0 50px}
     .pub-section-title h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,3vw,34px);color:var(--ink);margin:14px 0 12px;letter-spacing:-.015em}
@@ -81,6 +182,7 @@
     .btn-primary{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:15px 26px;border-radius:11px;font-size:14.5px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 16px 34px -14px rgba(15,98,214,.55);transition:transform .25s ease,box-shadow .25s ease}
     .btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 40px -14px rgba(15,98,214,.65)}
 
+    /* ── FOOTER ── */
     .pub-footer{background:var(--ink);color:rgba(255,255,255,.7);padding:40px 48px}
     .footer-bottom{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(255,255,255,.55)}
     .footer-bottom a{color:var(--sky);font-weight:600}
@@ -96,64 +198,253 @@
       *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
     }
 
+    /* ============================================================
+       OFFRES VEDETTES
+       ============================================================ */
+    .spotlight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 
-    .feature-row{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;border-radius:24px;overflow:hidden;margin-bottom:24px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(10,42,99,.04);transition:box-shadow .35s ease, transform .35s ease}
-    .feature-row:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px)}
-    .feature-row.reverse{grid-template-columns:1fr 1fr}
-    .feature-row.reverse .feature-visual{order:2}
-    .feature-visual{position:relative;height:100%;min-height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-deep),var(--primary-dark) 55%,var(--primary-light))}
-    .feature-visual.alt{background:linear-gradient(135deg,#062A63,#0F62D6 65%,#6FB6FF)}
-    .feature-visual.alt2{background:linear-gradient(135deg,#0A3F8F,#3F8DF2 70%,#8FC6F0)}
-    .feature-visual::before{content:"";position:absolute;inset:0;background:radial-gradient(220px 220px at 70% 20%,rgba(255,255,255,.18),transparent 60%)}
-    .feature-visual svg{width:84px;height:84px;stroke:#fff;stroke-width:1.2;position:relative;z-index:1;opacity:.92}
-    .feature-text{padding:42px 46px}
-    .feature-text .promo-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);font-weight:600;margin-bottom:10px;display:block}
-    .feature-text h3{font-family:var(--display);font-weight:700;font-size:24px;color:var(--ink);margin:0 0 12px;letter-spacing:-.01em}
-    .feature-text p{font-size:15px;color:var(--text-soft);line-height:1.65;margin:0 0 20px}
-    .feature-text .promo-cta{font-size:13.5px;font-weight:600;color:var(--primary-dark);display:inline-flex;align-items:center;gap:6px;transition:gap .25s ease}
-    .feature-row:hover .promo-cta{gap:10px}
+    .spotlight-card{
+      --mx:50%; --my:50%; --accent:var(--primary); --accent-dark:var(--primary-dark);
+      position:relative;overflow:hidden;border-radius:26px;background:#fff;
+      border:1px solid var(--line);padding:34px 30px 30px;
+      display:flex;flex-direction:column;min-height:420px;
+      box-shadow:0 1px 2px rgba(10,42,99,.04);
+      transform:perspective(1000px) rotateX(0deg) rotateY(0deg);
+      transition:transform .25s cubic-bezier(.16,.8,.3,1), box-shadow .35s ease, border-color .35s ease, opacity .7s cubic-bezier(.16,.8,.3,1), translate .7s cubic-bezier(.16,.8,.3,1);
+      opacity:0;translate:0 26px;
+    }
+    .spotlight-card.is-visible{opacity:1;translate:0 0}
+    .spotlight-card:nth-child(1){transition-delay:0s, .35s, .35s, 0s, 0s}
+    .spotlight-card:nth-child(2){transition-delay:0s, .35s, .35s, .12s, .12s}
+    .spotlight-card:nth-child(3){transition-delay:0s, .35s, .35s, .24s, .24s}
+    .spotlight-card:hover{box-shadow:var(--shadow-lg);border-color:var(--tint-2)}
 
-    .bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:22px}
-    .bento .service-card.featured{grid-column:span 2;display:flex;align-items:center;gap:24px;background:linear-gradient(120deg,var(--tint),var(--tint-2))}
-    .bento .service-card.featured .service-icon{margin-bottom:0;flex-shrink:0}
-    .service-card{background:var(--tint);border-radius:18px;padding:30px 28px;border:1px solid transparent;transition:border-color .3s ease,background .3s ease,transform .3s ease}
-    .service-card:hover{background:#fff;border-color:var(--tint-2);box-shadow:var(--shadow);transform:translateY(-4px)}
-    .service-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--primary-dark);margin-bottom:18px;box-shadow:0 4px 14px -6px rgba(10,42,99,.18)}
-    .service-card h3{font-family:var(--display);font-weight:600;font-size:17px;color:var(--ink);margin:0 0 8px}
-    .service-card p{font-size:13.8px;color:var(--text-soft);line-height:1.6;margin:0}
+    .spotlight-card::before{
+      content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;
+      background:radial-gradient(420px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 10%, transparent), transparent 62%);
+      transition:opacity .4s ease;
+    }
+    .spotlight-card:hover::before{opacity:1}
+
+    .spotlight-topbar{position:relative;z-index:1;height:3px;border-radius:3px;background:var(--tint-2);margin:-2px -2px 0;overflow:hidden}
+    .spotlight-topbar::after{
+      content:"";position:absolute;inset:0;width:0%;
+      background:linear-gradient(90deg,var(--accent-dark),var(--accent));
+      transition:width .5s cubic-bezier(.16,.8,.3,1);
+    }
+    .spotlight-card:hover .spotlight-topbar::after{width:100%}
+
+    .spotlight-index{
+      position:absolute;top:-6px;right:14px;z-index:0;pointer-events:none;
+      font-family:var(--display);font-weight:800;font-size:110px;line-height:1;
+      color:color-mix(in srgb, var(--accent) 7%, transparent);
+      transition:transform .5s cubic-bezier(.16,.8,.3,1), color .5s ease;
+    }
+    .spotlight-card:hover .spotlight-index{transform:translateY(-6px);color:color-mix(in srgb, var(--accent) 12%, transparent)}
+
+    .spotlight-head{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+
+    .spotlight-icon-ring{
+      width:58px;height:58px;border-radius:16px;flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent-dark),var(--accent));
+      display:flex;align-items:center;justify-content:center;position:relative;
+      box-shadow:0 12px 26px -12px color-mix(in srgb, var(--accent) 70%, transparent);
+    }
+    .spotlight-icon-ring::after{
+      content:"";position:absolute;inset:-6px;border-radius:20px;border:1.5px solid color-mix(in srgb, var(--accent) 35%, transparent);
+      opacity:0;transform:scale(.85);transition:opacity .4s ease, transform .4s ease;
+    }
+    .spotlight-card:hover .spotlight-icon-ring::after{opacity:1;transform:scale(1)}
+    .spotlight-icon-ring svg{width:27px;height:27px;stroke:#fff}
+
+    .stat-ring-wrap{position:relative;width:64px;height:64px;flex-shrink:0}
+    .stat-ring{width:64px;height:64px;transform:rotate(-90deg)}
+    .stat-ring-bg{fill:none;stroke:var(--tint-2);stroke-width:5}
+    .stat-ring-fg{
+      fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round;
+      stroke-dasharray:213.6;stroke-dashoffset:213.6;
+      transition:stroke-dashoffset 1.1s cubic-bezier(.16,.8,.3,1) .3s;
+    }
+    .spotlight-card.is-visible .stat-ring-fg{stroke-dashoffset:var(--ring-offset)}
+    .stat-ring-label{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--ink);
+    }
+
+    .spotlight-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:20px 0 8px;position:relative;z-index:1;display:block}
+    .spotlight-card h3{position:relative;z-index:1;font-family:var(--display);font-weight:700;font-size:21px;color:var(--ink);margin:0 0 10px;letter-spacing:-.01em}
+    .spotlight-card p{position:relative;z-index:1;font-size:14px;color:var(--text-soft);line-height:1.65;margin:0 0 20px;flex-grow:1}
+
+    .spotlight-meta{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);padding-top:16px;margin-bottom:20px}
+    .spotlight-meta div{padding-right:10px;border-right:1px solid var(--line)}
+    .spotlight-meta div:last-child{border-right:none}
+    .spotlight-meta span{display:block;font-size:10.5px;color:var(--text-soft);margin-bottom:4px}
+    .spotlight-meta strong{font-family:var(--mono);font-size:14.5px;color:var(--ink);font-weight:600}
+
+    .spotlight-cta{
+      position:relative;z-index:1;font-size:13.5px;font-weight:600;color:var(--accent-dark);
+      display:inline-flex;align-items:center;gap:7px;
+    }
+    .spotlight-cta svg{width:15px;height:15px;transition:transform .3s cubic-bezier(.16,.8,.3,1)}
+    .spotlight-card:hover .spotlight-cta svg{transform:translateX(5px)}
+
+    @media (max-width:980px){
+      .spotlight-grid{grid-template-columns:1fr}
+      .spotlight-card{min-height:auto}
+    }
+
+    /* ============================================================
+       SOLUTIONS — cartes horizontales défilables
+       ============================================================ */
+    .solutions-section{padding-bottom:70px}
+
+    .card-stack-wrap{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:20px;
+      width:100%;
+      margin:0 auto;
+    }
+
+    .card-stack{
+      flex:1;
+      min-width:0;
+      height:320px;
+      overflow-y:auto;
+      scroll-snap-type:y mandatory;
+      scrollbar-width:none;
+      -webkit-mask-image:linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+      mask-image:linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+      padding:16px 4px;
+    }
+    .card-stack::-webkit-scrollbar{display:none}
+
+    .bank-solution-card{
+      scroll-snap-align:center;
+      position:relative;
+      overflow:hidden;
+      min-height:216px;
+      border-radius:24px;
+      padding:32px 44px;
+      margin-bottom:20px;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      gap:36px;
+      box-shadow:var(--shadow-lg);
+      transition:transform .4s cubic-bezier(.16,.8,.3,1);
+    }
+    .bank-solution-card:last-child{margin-bottom:0}
+    .bank-solution-card:hover{transform:scale(1.008)}
+
+    .bank-solution-card.v1{background:linear-gradient(120deg,var(--primary-deep) 0%,var(--primary-dark) 40%,var(--primary-light) 100%,var(--sky) 140%)}
+    .bank-solution-card.v2{background:linear-gradient(120deg,#0A3F8F 0%,#1A5DC2 50%,#3F8DF2 130%)}
+    .bank-solution-card.v3{background:linear-gradient(120deg,#062A63 0%,#0F62D6 60%,#6FB6FF 140%)}
+
+    .bsc-glow{position:absolute;top:-40%;right:-6%;width:38%;height:180%;background:radial-gradient(circle, rgba(255,255,255,.14), transparent 65%);pointer-events:none}
+
+    .bsc-left{position:relative;z-index:1;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-start;gap:14px;width:96px}
+    .bsc-mark{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.02em}
+    .bsc-icon{
+      width:48px;height:48px;border-radius:13px;
+      background:rgba(255,255,255,.14);backdrop-filter:blur(6px);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .bsc-icon svg{width:24px;height:24px;stroke:#fff}
+    .bsc-chip{
+      width:36px;height:26px;border-radius:6px;position:relative;
+      background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,255,255,.6));
+    }
+    .bsc-chip::before{content:"";position:absolute;inset:4px;border:1px solid rgba(10,42,99,.25);border-radius:2px}
+
+    .bsc-body{position:relative;z-index:1;flex:1.3;min-width:0}
+    .bsc-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:600}
+    .bsc-body h3{font-family:var(--display);font-weight:700;font-size:22px;margin:6px 0 8px;letter-spacing:-.01em}
+    .bsc-body p{
+      font-size:13.8px;line-height:1.6;color:rgba(255,255,255,.82);margin:0;max-width:400px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    }
+
+    .bsc-right{position:relative;z-index:1;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-start;gap:14px;width:230px}
+
+    .bsc-features{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+    .bsc-features li{font-size:12.5px;color:rgba(255,255,255,.92);display:flex;align-items:center;gap:8px}
+    .bsc-features li::before{
+      content:"";flex-shrink:0;width:14px;height:14px;border-radius:50%;
+      background:rgba(255,255,255,.18);
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:center;background-size:8px 8px;
+    }
+
+    .bsc-cta{
+      font-size:12.5px;font-weight:600;color:var(--primary-deep);background:#fff;
+      padding:10px 18px;border-radius:99px;display:inline-flex;align-items:center;gap:7px;
+      transition:gap .25s ease, transform .25s ease;
+    }
+    .bsc-cta span{transition:transform .25s ease}
+    .bank-solution-card:hover .bsc-cta{gap:11px}
+    .bank-solution-card:hover .bsc-cta span{transform:translateX(3px)}
+
+    .stack-nav-btn{
+      flex-shrink:0;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--line);
+      background:#fff;color:var(--primary-dark);display:flex;align-items:center;justify-content:center;
+      cursor:pointer;box-shadow:0 8px 20px -10px rgba(10,42,99,.25);transition:background .25s ease, transform .2s ease, border-color .25s ease;
+    }
+    .stack-nav-btn svg{width:19px;height:19px}
+    .stack-nav-btn:hover{background:var(--tint);border-color:var(--primary);transform:translateY(-2px)}
+    .stack-nav-btn:active{transform:translateY(0)}
+
+    .card-stack-dots{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:22px}
+    .stack-dot{
+      width:8px;height:8px;border-radius:50%;background:var(--line);border:none;padding:0;cursor:pointer;
+      transition:background .25s ease, width .25s ease;
+    }
+    .stack-dot.active{background:var(--primary);width:24px;border-radius:5px}
 
     @media (max-width:860px){
-      .feature-row,.feature-row.reverse{grid-template-columns:1fr}
-      .feature-row.reverse .feature-visual{order:0}
-      .feature-visual{min-height:160px}
-      .bento{grid-template-columns:1fr}
-      .bento .service-card.featured{grid-column:span 1;flex-direction:column;align-items:flex-start}
+      .bank-solution-card{flex-direction:column;align-items:flex-start;gap:18px;padding:28px 26px;min-height:auto}
+      .bsc-left{flex-direction:row;align-items:center;width:100%;gap:14px}
+      .bsc-body p{max-width:100%;-webkit-line-clamp:3}
+      .bsc-right{width:100%}
+      .card-stack{height:420px}
+    }
+    @media (max-width:600px){
+      .stack-nav-btn{display:none}
     }
 
   </style>
 </head>
 <body>
+
+<!-- ══════ NAVBAR ══════ -->
 <nav class="pub-nav" id="nav">
   <a href="/" class="pub-nav-brand">
-    <div class="pub-nav-logo">STB</div>
-    <div><div class="pub-nav-name">Société Tunisienne de Banque</div><div class="pub-nav-tagline">Fondée en 1957</div></div>
+    <img src="/images/logo.jpg" alt="STB Logo" class="pub-nav-logo-img">
+    <div>
+      <div class="pub-nav-name">Société Tunisienne de Banque</div>
+      <div class="pub-nav-tagline">Fondée en 1957</div>
+    </div>
   </a>
   <div class="pub-nav-links">
     <a href="/">Accueil</a>
     <a href="/services" class="active">Nos Services</a>
     <a href="/agences">Agences</a>
     <a href="/contact">Contact</a>
-    <a href="/login" class="btn-espace">Espace Client</a>
+    <a href="/login" class="btn-espace">Accès Interne</a>
   </div>
 </nav>
+
+<!-- ══════ PAGE HERO avec image floutée ══════ -->
 <section class="page-hero">
   <div class="page-hero-inner">
     <span class="eyebrow">Catalogue complet</span>
     <h1>Nos <em>services</em></h1>
-    <p>Une gamme complète de produits financiers pour tous vos besoins, particuliers comme entreprises.</p>
+    <p>Une gamme complète de produits financiers pour tous vos besoins,<br>particuliers comme entreprises.</p>
   </div>
 </section>
 
+<!-- ══════ OFFRES VEDETTES ══════ -->
 <section class="pub-section" style="padding-top:20px">
   <div class="pub-section-title reveal">
     <span class="eyebrow">Offres vedettes</span>
@@ -161,91 +452,394 @@
     <p>Nos produits les plus demandés, présentés en détail.</p>
   </div>
 
-  <div class="feature-row reveal-left">
-    <div class="feature-visual">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>
-    </div>
-    <div class="feature-text">
-      <span class="promo-tag">Immobilier</span>
+  <div class="spotlight-grid">
+
+    <article class="spotlight-card" data-tilt style="--accent:var(--primary); --accent-dark:var(--primary-dark)">
+      <div class="spotlight-topbar"></div>
+      <span class="spotlight-index">01</span>
+      <div class="spotlight-head">
+        <div class="spotlight-icon-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6">
+            <path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/>
+          </svg>
+        </div>
+        <div class="stat-ring-wrap">
+          <svg class="stat-ring" viewBox="0 0 68 68">
+            <circle class="stat-ring-bg" cx="34" cy="34" r="34"/>
+            <circle class="stat-ring-fg" cx="34" cy="34" r="34" style="--ring-offset:29.9"></circle>
+          </svg>
+          <span class="stat-ring-label">86%</span>
+        </div>
+      </div>
+      <span class="spotlight-tag">Immobilier</span>
       <h3>Crédit Immobilier STB</h3>
-      <p>Jusqu'à 300 000 DT sur 25 ans, taux fixe ou révisable selon votre profil. Dossier étudié et réponse sous 72h par un conseiller dédié.</p>
-      <a href="#" class="promo-cta">Simuler mon crédit →</a>
-    </div>
-  </div>
+      <p>Jusqu'à 300 000 DT sur 25 ans, taux fixe ou révisable selon votre profil. Dossier étudié et réponse rapide par un conseiller dédié.</p>
+      <div class="spotlight-meta">
+        <div><span>Taux dès</span><strong>6.9%</strong></div>
+        <div><span>Durée max</span><strong>25 ans</strong></div>
+        <div><span>Réponse</span><strong>72h</strong></div>
+      </div>
+      <a href="#" class="spotlight-cta">Simuler mon crédit
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </a>
+    </article>
 
-  <div class="feature-row reverse reveal-right">
-    <div class="feature-visual alt">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="7" rx="1.5"/><path d="M5 10V7a2 2 0 0 1 2-2h2M19 10V7a2 2 0 0 0-2-2h-2"/><circle cx="7.5" cy="20" r="1.5"/><circle cx="16.5" cy="20" r="1.5"/></svg>
-    </div>
-    <div class="feature-text">
-      <span class="promo-tag">Auto</span>
+    <article class="spotlight-card" data-tilt style="--accent:#1A5DC2; --accent-dark:#0A3F8F">
+      <div class="spotlight-topbar"></div>
+      <span class="spotlight-index">02</span>
+      <div class="spotlight-head">
+        <div class="spotlight-icon-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6">
+            <rect x="3" y="10" width="18" height="7" rx="1.5"/>
+            <path d="M5 10V7a2 2 0 0 1 2-2h2M19 10V7a2 2 0 0 0-2-2h-2"/>
+            <circle cx="7.5" cy="20" r="1.5"/><circle cx="16.5" cy="20" r="1.5"/>
+          </svg>
+        </div>
+        <div class="stat-ring-wrap">
+          <svg class="stat-ring" viewBox="0 0 68 68">
+            <circle class="stat-ring-bg" cx="34" cy="34" r="34"/>
+            <circle class="stat-ring-fg" cx="34" cy="34" r="34" style="--ring-offset:47.2"></circle>
+          </svg>
+          <span class="stat-ring-label">78%</span>
+        </div>
+      </div>
+      <span class="spotlight-tag">Auto</span>
       <h3>Crédit Auto toutes marques</h3>
-      <p>Financez votre véhicule neuf ou d'occasion avec notre offre à 6.5% TEG. Simulation immédiate, sans frais de dossier cachés.</p>
-      <a href="#" class="promo-cta">Découvrir l'offre →</a>
-    </div>
-  </div>
+      <p>Financez votre véhicule neuf ou d'occasion avec notre offre à taux préférentiel. Simulation immédiate, sans frais de dossier cachés.</p>
+      <div class="spotlight-meta">
+        <div><span>Taux dès</span><strong>6.5%</strong></div>
+        <div><span>Durée max</span><strong>7 ans</strong></div>
+        <div><span>Réponse</span><strong>48h</strong></div>
+      </div>
+      <a href="#" class="spotlight-cta">Découvrir l'offre
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </a>
+    </article>
 
-  <div class="feature-row reveal-left">
-    <div class="feature-visual alt2">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
-    </div>
-    <div class="feature-text">
-      <span class="promo-tag">Premium</span>
+    <article class="spotlight-card" data-tilt style="--accent:#0F62D6; --accent-dark:#062A63">
+      <div class="spotlight-topbar"></div>
+      <span class="spotlight-index">03</span>
+      <div class="spotlight-head">
+        <div class="spotlight-icon-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6">
+            <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/>
+          </svg>
+        </div>
+        <div class="stat-ring-wrap">
+          <svg class="stat-ring" viewBox="0 0 68 68">
+            <circle class="stat-ring-bg" cx="34" cy="34" r="34"/>
+            <circle class="stat-ring-fg" cx="34" cy="34" r="34" style="--ring-offset:19.2"></circle>
+          </svg>
+          <span class="stat-ring-label">91%</span>
+        </div>
+      </div>
+      <span class="spotlight-tag">Premium</span>
       <h3>Pack STB Privilège</h3>
       <p>Carte Gold, conseiller dédié, assurance voyage premium et plafonds élevés — l'expérience bancaire haut de gamme.</p>
-      <a href="#" class="promo-cta">En savoir plus →</a>
-    </div>
+      <div class="spotlight-meta">
+        <div><span>Cotisation</span><strong>29DT/m</strong></div>
+        <div><span>Plafond</span><strong>15k DT</strong></div>
+        <div><span>Assistance</span><strong>24/7</strong></div>
+      </div>
+      <a href="#" class="spotlight-cta">En savoir plus
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </a>
+    </article>
+
   </div>
 </section>
 
-<section class="pub-section" style="background:var(--tint);border-radius:32px;margin:0 24px 24px">
+<!-- ══════ SOLUTIONS ══════ -->
+<section class="pub-section solutions-section" style="background:var(--tint);border-radius:32px;margin:0 24px 24px">
   <div class="pub-section-title reveal">
     <span class="eyebrow">Toutes nos solutions</span>
     <h2>Le quotidien, simplifié</h2>
-    <p>Des produits du compte courant au transfert international.</p>
+    <p>Des produits du compte courant au transfert international. Faites défiler pour explorer notre gamme.</p>
   </div>
-  <div class="bento reveal">
-    <div class="service-card featured">
-      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
-      <div><h3>Compte Courant</h3><p>Gérez vos opérations quotidiennes avec notre compte courant sans frais de tenue minimum.</p></div>
+
+  <div class="card-stack-wrap reveal">
+    <button class="stack-nav-btn" id="stackUp" aria-label="Précédent">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M18 15l-6-6-6 6"/>
+      </svg>
+    </button>
+
+    <div class="card-stack" id="cardStack">
+
+      <article class="bank-solution-card v1">
+        <div class="bsc-glow"></div>
+        <div class="bsc-left">
+          <span class="bsc-mark">STB</span>
+          <div class="bsc-icon">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/>
+            </svg>
+          </div>
+          <div class="bsc-chip"></div>
+        </div>
+        <div class="bsc-body">
+          <span class="bsc-tag">Compte du quotidien</span>
+          <h3>Compte Courant</h3>
+          <p>Gérez vos opérations quotidiennes avec notre compte courant sans frais de tenue minimum.</p>
+        </div>
+        <div class="bsc-right">
+          <ul class="bsc-features">
+            <li>Sans frais de tenue</li>
+            <li>Carte incluse</li>
+            <li>Ouverture 100% en ligne</li>
+          </ul>
+          <a href="/services" class="bsc-cta">Ouvrir un compte <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="bank-solution-card v2">
+        <div class="bsc-glow"></div>
+        <div class="bsc-left">
+          <span class="bsc-mark">STB</span>
+          <div class="bsc-icon">
+            <svg class="icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/>
+            </svg>
+          </div>
+          <div class="bsc-chip"></div>
+        </div>
+        <div class="bsc-body">
+          <span class="bsc-tag">Épargne</span>
+          <h3>Livret d'Épargne</h3>
+          <p>Taux attractif, disponibilité permanente et sans plafond pour faire fructifier votre argent.</p>
+        </div>
+        <div class="bsc-right">
+          <ul class="bsc-features">
+            <li>Taux jusqu'à 8% annuel</li>
+            <li>Disponible à tout moment</li>
+            <li>Aucun plafond de dépôt</li>
+          </ul>
+          <a href="/services" class="bsc-cta">Épargner maintenant <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="bank-solution-card v3">
+        <div class="bsc-glow"></div>
+        <div class="bsc-left">
+          <span class="bsc-mark">STB</span>
+          <div class="bsc-icon">
+            <svg class="icon" viewBox="0 0 24 24">
+              <rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/>
+              <path d="M2.5 9.5h19"/><path d="M6 14.5h4"/>
+            </svg>
+          </div>
+          <div class="bsc-chip"></div>
+        </div>
+        <div class="bsc-body">
+          <span class="bsc-tag">Carte bancaire</span>
+          <h3>Carte Visa Classique</h3>
+          <p>Paiement en ligne et en magasin, retraits GAB, contrôle total via l'application mobile.</p>
+        </div>
+        <div class="bsc-right">
+          <ul class="bsc-features">
+            <li>Acceptée dans 160+ pays</li>
+            <li>Retraits GAB illimités</li>
+            <li>Blocage instantané via l'app</li>
+          </ul>
+          <a href="/services" class="bsc-cta">Commander ma carte <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="bank-solution-card v1">
+        <div class="bsc-glow"></div>
+        <div class="bsc-left">
+          <span class="bsc-mark">STB</span>
+          <div class="bsc-icon">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M3 20h18"/><path d="M6 20V12M11 20V7M16 20v-9M21 20V4"/>
+              <path d="M3 9l4-4 4 3 5-6"/>
+            </svg>
+          </div>
+          <div class="bsc-chip"></div>
+        </div>
+        <div class="bsc-body">
+          <span class="bsc-tag">Placement</span>
+          <h3>Bon de Trésor</h3>
+          <p>Placement sécurisé garanti par l'État tunisien, pour investir en toute tranquillité.</p>
+        </div>
+        <div class="bsc-right">
+          <ul class="bsc-features">
+            <li>Capital garanti par l'État</li>
+            <li>Rendement fixe et prévisible</li>
+            <li>Plusieurs durées disponibles</li>
+          </ul>
+          <a href="/services" class="bsc-cta">Investir en sécurité <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="bank-solution-card v2">
+        <div class="bsc-glow"></div>
+        <div class="bsc-left">
+          <span class="bsc-mark">STB</span>
+          <div class="bsc-icon">
+            <svg class="icon" viewBox="0 0 24 24">
+              <rect x="7" y="2.5" width="10" height="19" rx="2.5"/>
+              <path d="M11 18.5h2"/>
+            </svg>
+          </div>
+          <div class="bsc-chip"></div>
+        </div>
+        <div class="bsc-body">
+          <span class="bsc-tag">Digital</span>
+          <h3>STB Mobile</h3>
+          <p>Virements, consultation de solde, paiement de factures — depuis votre smartphone, 24h/24.</p>
+        </div>
+        <div class="bsc-right">
+          <ul class="bsc-features">
+            <li>Virements instantanés</li>
+            <li>Paiement de factures en 1 clic</li>
+            <li>Disponible iOS &amp; Android</li>
+          </ul>
+          <a href="/services" class="bsc-cta">Télécharger l'app <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="bank-solution-card v3">
+        <div class="bsc-glow"></div>
+        <div class="bsc-left">
+          <span class="bsc-mark">STB</span>
+          <div class="bsc-icon">
+            <svg class="icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>
+            </svg>
+          </div>
+          <div class="bsc-chip"></div>
+        </div>
+        <div class="bsc-body">
+          <span class="bsc-tag">International</span>
+          <h3>Transfert International</h3>
+          <p>Envoi et réception de fonds depuis et vers plus de 150 pays, en toute sécurité.</p>
+        </div>
+        <div class="bsc-right">
+          <ul class="bsc-features">
+            <li>150+ pays couverts</li>
+            <li>Suivi en temps réel</li>
+            <li>Taux de change compétitifs</li>
+          </ul>
+          <a href="/services" class="bsc-cta">Envoyer des fonds <span>→</span></a>
+        </div>
+      </article>
+
     </div>
-    <div class="service-card">
-      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></div>
-      <h3>Livret d'Épargne</h3><p>Taux attractif, disponibilité permanente et sans plafond.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/></svg></div>
-      <h3>Carte Visa Classique</h3><p>Paiement en ligne et en magasin, retraits GAB, contrôle via app mobile.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M6 20V12M11 20V7M16 20v-9M21 20V4"/><path d="M3 9l4-4 4 3 5-6"/></svg></div>
-      <h3>Bon de Trésor</h3><p>Placement sécurisé garanti par l'État tunisien.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
-      <h3>STB Mobile</h3><p>Virements, consultation, paiement de factures — depuis votre smartphone.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
-      <h3>Transfert International</h3><p>Envoi et réception de fonds depuis/vers plus de 150 pays.</p>
-    </div>
+
+    <button class="stack-nav-btn" id="stackDown" aria-label="Suivant">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </button>
   </div>
+
+  <div class="card-stack-dots" id="stackDots"></div>
 </section>
+
+<!-- ══════ FOOTER ══════ -->
 <footer class="pub-footer">
   <div class="footer-bottom">
     <span>© 2024 Société Tunisienne de Banque. <a href="/">← Retour à l'accueil</a></span>
     <span>Site sécurisé SSL · Banque soumise à la réglementation BCT</span>
   </div>
 </footer>
+
 <script>
+  /* ── Navbar scroll ── */
   const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => { nav.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('is-scrolled', window.scrollY > 8);
+  }, { passive: true });
+
+  /* ── Reveal on scroll ── */
   const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+    });
   }, { threshold: 0.12 });
   revealEls.forEach(el => io.observe(el));
 
+  /* ── Spotlight cards ── */
+  const spotlightCards = document.querySelectorAll('.spotlight-card');
+  const spotIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); spotIo.unobserve(e.target); }
+    });
+  }, { threshold: 0.2 });
+  spotlightCards.forEach(c => spotIo.observe(c));
+
+  const supportsHover = window.matchMedia('(hover: hover)').matches;
+  if (supportsHover) {
+    spotlightCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mx', x + 'px');
+        card.style.setProperty('--my', y + 'px');
+        const rx = ((y / rect.height) - 0.5) * -6;
+        const ry = ((x / rect.width) - 0.5) * 6;
+        card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+      });
+    });
+  }
+
+  /* ── Card stack navigation ── */
+  const cardStack = document.getElementById('cardStack');
+  if (cardStack) {
+    const cards = Array.from(cardStack.querySelectorAll('.bank-solution-card'));
+    const dotsWrap = document.getElementById('stackDots');
+
+    cards.forEach((card, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'stack-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Aller à la carte ' + (i + 1));
+      dot.addEventListener('click', () => {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      dotsWrap.appendChild(dot);
+    });
+
+    const dots = Array.from(dotsWrap.children);
+    const stackIo = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const idx = cards.indexOf(entry.target);
+        if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+          dots.forEach(d => d.classList.remove('active'));
+          if (dots[idx]) dots[idx].classList.add('active');
+        }
+      });
+    }, { root: cardStack, threshold: [0.6] });
+    cards.forEach(c => stackIo.observe(c));
+
+    document.getElementById('stackUp')?.addEventListener('click', () => {
+      cardStack.scrollBy({ top: -236, behavior: 'smooth' });
+    });
+    document.getElementById('stackDown')?.addEventListener('click', () => {
+      cardStack.scrollBy({ top: 236, behavior: 'smooth' });
+    });
+  }
+
+  /* ── Image hero fallback si pas d'image ── */
+  const heroEl = document.querySelector('.page-hero');
+  if (heroEl) {
+    const testImg = new Image();
+    testImg.onload = () => {};
+    testImg.onerror = () => { heroEl.classList.add('no-img'); };
+    testImg.src = '/images/stb.jpg';
+  }
 </script>
 </body>
 </html>
