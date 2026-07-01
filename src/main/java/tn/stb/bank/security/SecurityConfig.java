@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import java.util.List;
 
 @Configuration
@@ -65,8 +67,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // CSRF via cookie — évite l'erreur "Cannot create session after response committed"
+        CookieCsrfTokenRepository csrfRepo = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+        requestHandler.setCsrfRequestAttributeName(null);
+
         http
                 .authenticationProvider(authProvider())
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(csrfRepo)
+                        .csrfTokenRequestHandler(requestHandler)
+                        .ignoringRequestMatchers("/h2-console/**")
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/accueil", "/services", "/agences", "/contact",
@@ -99,8 +111,8 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .exceptionHandling(ex -> ex.accessDeniedPage("/access-denied"))
-                .headers(h -> h.frameOptions(f -> f.disable()))
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
+                .headers(h -> h.frameOptions(f -> f.disable()));
+
         return http.build();
     }
 

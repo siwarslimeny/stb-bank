@@ -35,7 +35,7 @@
     a{text-decoration:none;color:inherit}
 
     /* ═══════════════════════════════════════════
-       ÉCRAN D'INTRO — CADENAS GÉANT ANIMÉ
+       ÉCRAN D'INTRO / TRANSITION — CADENAS GÉANT
        ═══════════════════════════════════════════ */
     .lock-intro{
       position:fixed;inset:0;z-index:8000;
@@ -46,8 +46,11 @@
     @keyframes introOut{
       to{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.05)}
     }
+    .lock-intro.logout-mode{animation:none;opacity:1;visibility:visible;pointer-events:all}
+    .lock-intro.logout-mode.is-leaving{
+      animation:introOut .7s cubic-bezier(.7,0,.84,0) forwards;
+    }
 
-    /* Le cadenas occupe désormais une part dominante de l'écran */
     .lock-svg-wrap{
       width:min(32vw, 300px);
       height:min(40vw, 360px);
@@ -69,6 +72,7 @@
       50%{transform:scale(1.06);opacity:.8}
     }
 
+    /* ── Ouverture (connexion) ── */
     .lock-shackle{
       transform-origin:30px 46px;
       animation:shackleOpen 2.6s cubic-bezier(.5,0,.2,1) forwards;
@@ -90,6 +94,32 @@
       100%{fill:var(--sky);opacity:1}
     }
 
+    /* ── Fermeture (déconnexion) : part de l'état ouvert, se referme ── */
+    .lock-intro.logout-mode .lock-shackle{
+      animation:none;
+      transform:rotate(-38deg) translate(-4px,-3px);
+    }
+    .lock-intro.logout-mode .lock-keyhole{
+      animation:none;fill:var(--sky);opacity:1;
+    }
+    .lock-intro.logout-mode.is-closing .lock-shackle{
+      animation:shackleClose 1s cubic-bezier(.5,0,.2,1) forwards;
+    }
+    .lock-intro.logout-mode.is-closing .lock-keyhole{
+      animation:keyholeDim 1s ease forwards;
+    }
+    @keyframes shackleClose{
+      0%{transform:rotate(-38deg) translate(-4px,-3px)}
+      70%{transform:rotate(4deg) translate(0,0)}
+      85%{transform:rotate(-2deg)}
+      100%{transform:rotate(0deg)}
+    }
+    @keyframes keyholeDim{
+      0%{fill:var(--sky);opacity:1}
+      60%{fill:var(--gold);opacity:1}
+      100%{fill:#04102A;opacity:.6}
+    }
+
     .lock-status{
       font-family:var(--mono);font-size:14px;letter-spacing:.18em;text-transform:uppercase;
       color:var(--text-soft);opacity:0;
@@ -105,6 +135,10 @@
     }
     .lock-status::before{content:"Vérification sécurisée…"}
     .lock-status.unlocked::before{content:"Accès autorisé ✓"}
+    .lock-status.logout-msg{animation:statusSimpleFade .5s ease forwards}
+    .lock-status.logout-msg::before{content:"Déconnexion en cours…"}
+    .lock-status.logout-msg.closed::before{content:"Session fermée ✓"}
+    @keyframes statusSimpleFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
     @media (prefers-reduced-motion: reduce){
       .lock-intro{animation-duration:.01ms !important;animation-delay:0s !important}
@@ -121,37 +155,39 @@
     }
 
     /* ═══════════════════════════════════════════
-       PANNEAU YEUX DE SURVEILLANCE — GAUCHE
+       YEUX DE SURVEILLANCE — CENTRÉS, SANS CADRE
        ═══════════════════════════════════════════ */
     .watch-panel{
-      position:fixed;left:450px;top:35%;transform:translateY(-50%);z-index:3;
-      display:flex;flex-direction:column;align-items:center;gap:20px;
-      padding:30px 34px;border-radius:26px;
-      background:rgba(255,255,255,.04);
-      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-      border:1px solid rgba(255,255,255,.1);
-      box-shadow:0 30px 70px -30px rgba(0,0,0,.6);
-      opacity:0;animation:fadeIn .8s 2.5s cubic-bezier(.16,.8,.3,1) forwards;
+      position:fixed;left:18%;top:40%;transform:translate(-50%,-50%);z-index:1;
+      display:flex;flex-direction:column;align-items:center;gap:22px;
+      pointer-events:none;
+      opacity:0;animation:fadeIn 1s 2.5s cubic-bezier(.16,.8,.3,1) forwards;
     }
+    @keyframes fadeIn{to{opacity:.9}}
 
     .watch-eyes-row{
-      display:flex;align-items:center;gap:18px;
+      display:flex;align-items:center;gap:26px;
+      filter:drop-shadow(0 30px 55px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(46,124,246,.18));
     }
-    @keyframes fadeIn{to{opacity:1}}
 
     .watch-eye{
-      width:96px;height:64px;position:relative;
+      width:188px;height:128px;position:relative;
       display:flex;align-items:center;justify-content:center;
+      animation:eyeFloat 6s ease-in-out infinite;
+    }
+    .watch-eye.e2{animation-delay:.4s}
+    @keyframes eyeFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-8px)}
     }
     .watch-eye svg{width:100%;height:100%;overflow:visible}
 
-    .eye-sclera{fill:#0B1F3F;stroke:rgba(124,197,255,.4);stroke-width:1.4}
+    .eye-sclera{fill:rgba(11,31,63,.55);stroke:rgba(124,197,255,.45);stroke-width:1.4}
     .eye-iris{fill:url(#irisGrad)}
     .eye-pupil-dot{fill:#04102A}
-    .eye-highlight{fill:rgba(255,255,255,.75)}
+    .eye-highlight{fill:rgba(255,255,255,.8)}
 
-    /* clignement indépendant sur chaque œil pour un effet plus organique */
-    .eye-lid-top,.eye-lid-bottom{fill:#0C1A34}
+    .eye-lid-top,.eye-lid-bottom{fill:var(--bg-deep)}
     .watch-eye.e1 .eye-lid-top,.watch-eye.e1 .eye-lid-bottom{animation:blink 5.2s ease-in-out infinite}
     .watch-eye.e2 .eye-lid-top,.watch-eye.e2 .eye-lid-bottom{animation:blink 5.2s .35s ease-in-out infinite}
     @keyframes blink{
@@ -166,26 +202,20 @@
     .watch-eye.e2 .eye-iris-group{animation-delay:.6s}
     @keyframes irisScan{
       0%,100%{transform:translateX(0)}
-      20%{transform:translateX(-5px)}
-      45%{transform:translateX(4px)}
-      70%{transform:translateX(-3px)}
+      20%{transform:translateX(-6px)}
+      45%{transform:translateX(5px)}
+      70%{transform:translateX(-4px)}
       85%{transform:translateX(0)}
     }
 
-    .watch-panel-divider{width:30px;height:1px;background:rgba(255,255,255,.14)}
-
-    .watch-panel-label{
-      font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
-      color:var(--text-soft);text-align:center;line-height:1.6;
-    }
     .watch-panel-live{
-      display:flex;align-items:center;gap:6px;
-      font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5FE0A0;
+      display:flex;align-items:center;gap:7px;
+      font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(95,224,160,.85);
     }
     .watch-panel-live .dot{width:6px;height:6px;border-radius:50%;background:#5FE0A0;box-shadow:0 0 0 0 rgba(95,224,160,.6);animation:liveDot 2s ease-in-out infinite}
     @keyframes liveDot{
       0%,100%{box-shadow:0 0 0 0 rgba(95,224,160,.55)}
-      50%{box-shadow:0 0 0 6px rgba(95,224,160,0)}
+      50%{box-shadow:0 0 0 7px rgba(95,224,160,0)}
     }
 
     @media (max-width:980px){
@@ -199,7 +229,6 @@
       padding:40px 6vw;
     }
 
-    /* ── Logo image animé, coin supérieur gauche ── */
     .brand-corner{
       position:fixed;top:40px;left:48px;z-index:3;
       display:flex;align-items:center;gap:13px;
@@ -230,7 +259,6 @@
     .brand-corner-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-soft)}
     @keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
 
-    /* Message institutionnel discret, coin inférieur gauche */
     .hero-copy{
       position:fixed;left:48px;bottom:52px;max-width:400px;z-index:2;
       opacity:0;animation:fadeUp .8s 2.65s cubic-bezier(.16,.8,.3,1) forwards;
@@ -340,7 +368,7 @@
 </head>
 <body>
 
-<!-- ══════ ÉCRAN D'INTRO — CADENAS GÉANT ANIMÉ ══════ -->
+<!-- ══════ ÉCRAN D'INTRO / TRANSITION — CADENAS GÉANT ANIMÉ ══════ -->
 <div class="lock-intro" id="lockIntro">
   <div class="lock-svg-wrap">
     <div class="lock-glow-ring"></div>
@@ -365,7 +393,7 @@
   <div class="grain-grid"></div>
 </div>
 
-<!-- ══════ PANNEAU DE SURVEILLANCE — DEUX YEUX, GAUCHE ══════ -->
+<!-- ══════ YEUX DE SURVEILLANCE — CENTRÉS, SANS CADRE ══════ -->
 <div class="watch-panel">
   <div class="watch-eyes-row">
     <div class="watch-eye e1">
@@ -401,12 +429,8 @@
       </svg>
     </div>
   </div>
-
-  <div class="watch-panel-divider"></div>
-  <div class="watch-panel-label">Contrôle<br>d'accès</div>
-  <div class="watch-panel-live"><span class="dot"></span>Live</div>
+  <div class="watch-panel-live"><span class="dot"></span>Surveillance active</div>
 </div>
-
 
 <!-- ══════ LOGO IMAGE ANIMÉ, COIN SUPÉRIEUR GAUCHE ══════ -->
 <div class="brand-corner">
@@ -418,7 +442,6 @@
   </div>
   <div class="brand-corner-text">
     <div class="brand-corner-name">Société Tunisienne de Banque</div>
-    <div class="brand-corner-tag">Espace collaborateur · Fondée en 1957</div>
   </div>
 </div>
 
@@ -466,7 +489,7 @@
           </svg>
         </div>
       </div>
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <!-- PAS de champ _csrf ici — géré automatiquement via cookie -->
       <button type="submit" class="btn-submit">
         Se connecter
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -511,12 +534,43 @@
     setTimeout(() => { uField.style.boxShadow = ''; }, 600);
   }
 
-  /* Écran d'intro : bascule le texte de statut au moment où le cadenas s'ouvre,
-     puis retire complètement l'overlay du flux pour ne pas bloquer les clics */
   const lockStatus = document.getElementById('lockStatus');
   const lockIntro = document.getElementById('lockIntro');
-  setTimeout(() => { lockStatus.classList.add('unlocked'); }, 1650);
-  setTimeout(() => { lockIntro.style.display = 'none'; }, 3150);
+
+  /* CORRECTIF : détection de la déconnexion directement sur l'URL réelle
+     (?logout), au lieu d'un flag Thymeleaf qui pouvait rester dans le DOM
+     même hors contexte serveur et déclencher la séquence à tort. */
+  const urlParams = new URLSearchParams(window.location.search);
+  const isLogout = urlParams.has('logout');
+
+  if (isLogout) {
+    /* ── Séquence de déconnexion ──
+       Le cadenas apparaît déjà ouvert (accès qui vient de se terminer),
+       affiche "Déconnexion en cours…", se referme après une courte pause,
+       affiche "Session fermée ✓", puis redirige vers l'accueil public. */
+    lockIntro.classList.add('logout-mode');
+    lockStatus.classList.add('logout-msg');
+
+    setTimeout(() => {
+      lockIntro.classList.add('is-closing');
+    }, 500);
+
+    setTimeout(() => {
+      lockStatus.classList.add('closed');
+    }, 1350);
+
+    setTimeout(() => {
+      lockIntro.classList.add('is-leaving');
+    }, 1900);
+
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 2550);
+  } else {
+    /* ── Séquence d'ouverture normale (connexion) ── */
+    setTimeout(() => { lockStatus.classList.add('unlocked'); }, 1650);
+    setTimeout(() => { lockIntro.style.display = 'none'; }, 3150);
+  }
 </script>
 </body>
 </html>
