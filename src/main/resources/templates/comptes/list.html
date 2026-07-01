@@ -16,7 +16,7 @@
       <div class="stats-row">
         <div class="stat-card sc-blue"><div class="si si-blue">🏦</div><div class="stat-val" th:text="${comptes.size()}">0</div><div class="stat-lbl">Total comptes</div></div>
         <div class="stat-card sc-green"><div class="si si-green">💰</div><div class="stat-val" th:text="${#numbers.formatDecimal(totalSoldes/1000,1,0)+'K'}">0K</div><div class="stat-lbl">Total soldes (DT)</div></div>
-        <div class="stat-card sc-amber"><div class="si si-amber">✅</div><div class="stat-val" th:text="${comptes.stream().filter(c -> c.statut.name()=='ACTIF').count()}">0</div><div class="stat-lbl">Comptes actifs</div></div>
+        <div class="stat-card sc-amber"><div class="si si-amber">✅</div><div class="stat-val" th:text="${comptes.?[statut.name()=='ACTIF'].size()}">0</div><div class="stat-lbl">Comptes actifs</div></div>
         <div class="stat-card sc-navy"><div class="si si-navy">🔒</div><div class="stat-lbl" style="margin-top:8px">Accès</div><span class="badge b-info" style="margin-top:6px">ADMIN · COMPTA</span></div>
       </div>
       <div class="card">
