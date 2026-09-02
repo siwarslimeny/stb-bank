@@ -39,15 +39,15 @@ public class DataInitializer implements CommandLineRunner {
     private void seedUsers() {
         if (userRepo.count() > 0) return;
         userRepo.save(Utilisateur.builder().username("admin").password(encoder.encode("admin123"))
-                .nom("Mansouri").prenom("Tarek").email("t.mansouri@stb.com.tn")
+                .nom("Slimeni").prenom("Siwar").email("S.slimeni@stb.com.tn")
                 .telephone("22 100 001").role(Role.ADMIN).actif(true).build());
-        userRepo.save(Utilisateur.builder().username("alice.info").password(encoder.encode("pass123"))
+        userRepo.save(Utilisateur.builder().username("info").password(encoder.encode("info123"))
                 .nom("Ben Said").prenom("Alice").email("a.bensaid@stb.com.tn")
                 .telephone("22 100 002").role(Role.INFO).actif(true).build());
-        userRepo.save(Utilisateur.builder().username("bob.compta").password(encoder.encode("pass123"))
+        userRepo.save(Utilisateur.builder().username("compta").password(encoder.encode("compta123"))
                 .nom("Trabelsi").prenom("Bob").email("b.trabelsi@stb.com.tn")
                 .telephone("22 100 003").role(Role.COMPTABILITE).actif(true).build());
-        userRepo.save(Utilisateur.builder().username("carol.rh").password(encoder.encode("pass123"))
+        userRepo.save(Utilisateur.builder().username("rhh").password(encoder.encode("rh123"))
                 .nom("Amira").prenom("Carol").email("c.amira@stb.com.tn")
                 .telephone("22 100 004").role(Role.RH).actif(true).build());
     }
@@ -122,7 +122,7 @@ public class DataInitializer implements CommandLineRunner {
         if (txRepo.count() > 0) return;
         List<CompteBancaire> comptes = compteRepo.findAll();
         if (comptes.isEmpty()) return;
-        Utilisateur op = userRepo.findByUsername("bob.compta").orElse(null);
+        Utilisateur op = userRepo.findByUsername("compta").orElse(null);
         Object[][] txData = {
                 {"TX-2401","Salaire janvier",5200.0,
                         Transaction.TypeTransaction.VIREMENT, Transaction.SensTransaction.CREDIT,
@@ -213,7 +213,7 @@ public class DataInitializer implements CommandLineRunner {
         if (virRepo.count() > 0) return;
         List<CompteBancaire> comptes = compteRepo.findAll();
         if (comptes.size() < 2) return;
-        Utilisateur op = userRepo.findByUsername("bob.compta").orElse(null);
+        Utilisateur op = userRepo.findByUsername("compta").orElse(null);
         virRepo.save(Virement.builder().reference("VIR-001").montant(2000.0)
                 .compteDebiteur(comptes.get(0)).ibanCrediteur("TN5910012345670001")
                 .nomBeneficiaire("Leila Sfar").motif("Remboursement prêt")

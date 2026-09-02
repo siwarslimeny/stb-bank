@@ -464,56 +464,22 @@
     <p class="sub">Accédez à votre espace interne STB</p>
 
     <div th:if="${param.error}" class="alert alert-err">
-      <span>⚠</span> Identifiants incorrects. Vérifiez votre nom d'utilisateur et mot de passe.
+      <span>⚠</span> Connexion échouée. Réessayez.
     </div>
     <div th:if="${param.logout}" class="alert alert-ok">
       <span>✓</span> Vous avez été déconnecté avec succès.
     </div>
 
-    <form th:action="@{/login}" method="post">
-      <div class="field">
-        <label>Identifiant</label>
-        <div class="field-input-wrap">
-          <input type="text" name="username" placeholder="votre.identifiant" autocomplete="username" required>
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-        </div>
-      </div>
-      <div class="field">
-        <label>Mot de passe</label>
-        <div class="field-input-wrap">
-          <input type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/>
-          </svg>
-        </div>
-      </div>
-      <!-- PAS de champ _csrf ici — géré automatiquement via cookie -->
-      <button type="submit" class="btn-submit">
-        Se connecter
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14M13 6l6 6-6 6"/>
-        </svg>
-      </button>
-    </form>
+    <a th:href="@{/oauth2/authorization/keycloak}" class="btn-submit" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none">
+      Se connecter avec Keycloak
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </a>
 
-    <div class="divider">Accès démo</div>
-
-    <div class="demo-grid">
-      <button type="button" onclick="fill('admin','admin123')" class="demo-btn">
-        <span class="dot" style="background:#E31B23;color:#E31B23"></span>👑 Admin
-      </button>
-      <button type="button" onclick="fill('alice.info','pass123')" class="demo-btn">
-        <span class="dot" style="background:#2E7CF6;color:#2E7CF6"></span>📋 Info
-      </button>
-      <button type="button" onclick="fill('bob.compta','pass123')" class="demo-btn">
-        <span class="dot" style="background:#1AA15C;color:#1AA15C"></span>💼 Compta
-      </button>
-      <button type="button" onclick="fill('carol.rh','pass123')" class="demo-btn">
-        <span class="dot" style="background:#8B5CF6;color:#8B5CF6"></span>👥 RH
-      </button>
-    </div>
+    <p class="sub" style="margin-top:14px;font-size:12.5px">
+      Comptes démo Keycloak : admin, alice.info, bob.compta, carol.rh
+    </p>
 
     <a href="/" class="back-link">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

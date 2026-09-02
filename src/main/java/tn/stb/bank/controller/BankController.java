@@ -4,10 +4,12 @@ import tn.stb.bank.model.*;
 import tn.stb.bank.repository.CompteRepository;
 import tn.stb.bank.repository.UtilisateurRepository;
 import tn.stb.bank.service.EmployeService;
+import tn.stb.bank.service.OpaService;
 import tn.stb.bank.service.TransactionService;
 import tn.stb.bank.service.VirementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -190,6 +192,7 @@ class VirementController {
     private final VirementService virService;
     private final CompteRepository compteRepo;
     private final UtilisateurRepository userRepo;
+    private final OpaService opaService;
 
     private void addUser(Model m, UserDetails ud) {
         m.addAttribute("user",
@@ -228,7 +231,24 @@ class VirementController {
     }
 
     @PostMapping("/{id}/valider")
-    public String valider(@PathVariable Long id, RedirectAttributes ra) {
+    public String valider(@PathVariable Long id,
+                          @AuthenticationPrincipal UserDetails ud,
+                          RedirectAttributes ra) {
+        Virement v = virService.findById(id).orElse(null);
+        if (v == null) {
+            ra.addFlashAttribute("error", "Virement introuvable.");
+            return "redirect:/virements";
+        }
+
+        String role = extractRole(ud);
+        boolean allowed = opaService.isVirementValidationAllowed(role, v.getMontant());
+        if (!allowed) {
+            ra.addFlashAttribute("error",
+                    "Validation refusée par la politique OPA : montant trop élevé pour votre rôle ("
+                            + role + "). Contactez un administrateur.");
+            return "redirect:/virements";
+        }
+
         virService.valider(id);
         ra.addFlashAttribute("success", "Virement validé et exécuté !");
         return "redirect:/virements";
@@ -244,9 +264,30 @@ class VirementController {
     }
 
     @PostMapping("/{id}/supprimer")
-    public String delete(@PathVariable Long id, RedirectAttributes ra) {
+    public String delete(@PathVariable Long id,
+                         @AuthenticationPrincipal UserDetails ud,
+                         RedirectAttributes ra) {
+        String role = extractRole(ud);
+
+        boolean allowed = opaService.isVirementDeletionAllowed(role);
+        if (!allowed) {
+            ra.addFlashAttribute("error",
+                    "Suppression refusée par la politique OPA : seul un administrateur peut supprimer un virement.");
+            return "redirect:/virements";
+        }
+
         virService.delete(id);
         ra.addFlashAttribute("success", "Virement supprimé.");
         return "redirect:/virements";
+    }
+
+    private String extractRole(UserDetails ud) {
+        return ud.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(a -> a.startsWith("ROLE_"))
+                .map(a -> a.substring(5))
+                .filter(a -> !a.startsWith("DEFAULT-ROLES") && !a.equals("OFFLINE_ACCESS") && !a.equals("UMA_AUTHORIZATION"))
+                .findFirst()
+                .orElse("NONE");
     }
 }
